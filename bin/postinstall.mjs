@@ -115,6 +115,11 @@ async function copyFiles() {
       to: `${converterPath}/test/fixtures/empty-converted.html`,
       checksums: ['216171ec68a8d6fbc037fed3318d45c0'],
     },
+    {
+      from: 'template/eslintrc.js',
+      to: `${converterPath}/.eslintrc.js`,
+      checksums: ['70d00a37ccf790f46074ca75972ed7e7'],
+    },
   ];
 
   await Promise.all(files.map(({ from, to, checksums }) => copyFile(from, to, checksums)));
