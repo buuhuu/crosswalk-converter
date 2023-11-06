@@ -75,7 +75,10 @@ async function copyFiles() {
     {
       from: 'webpack.config.js',
       to: `${converterPath}/webpack.config.js`,
-      checksums: ['36c91744646fcb80b83fb6e6c9928c1a'],
+      checksums: [
+        '36c91744646fcb80b83fb6e6c9928c1a',
+        '71795d8b21c86aec377963b3ae98d1f8',
+      ],
     },
     {
       from: 'template/import.js',

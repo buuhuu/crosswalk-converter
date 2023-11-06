@@ -24,6 +24,11 @@ const DEFAULT_CONFIG = {
       type: 'umd',
     },
   },
+  externals: [
+    'node-fetch',
+    'openwhisk',
+    'express',
+  ],
   resolve: {
     modules: [
       'node_modules',

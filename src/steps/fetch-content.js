@@ -44,7 +44,7 @@ export default async function fetchContent(state, params, opts) {
 
   const [contentType] = (resp.headers.get('content-type') || 'text/html').split(';');
   const blob = isBinary(contentType)
-  // for binaries we spool the response base64 encoded
+    // for binaries we spool the response base64 encoded
     ? Buffer.from(await resp.arrayBuffer()).toString('base64')
     : await resp.text();
 
