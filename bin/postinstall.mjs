@@ -141,6 +141,7 @@ async function updatePackageJson() {
     'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
     'converter:serve:server': `cd ${converterPath} && nodemon --inspect ./dist/index.js --watch ./dist`,
     'converter:deploy': `node node_modules/crosswalk-converter/bin/deploy.mjs ${converterPath}/dist/index.js.zip`,
+    'converter:undeploy': 'node node_modules/crosswalk-converter/bin/undeploy.mjs',
   };
 
   packageJson.scripts = { ...packageJson.scripts, ...scripts };
