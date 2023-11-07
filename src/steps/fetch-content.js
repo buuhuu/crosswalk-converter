@@ -24,7 +24,7 @@ export default async function fetchContent(state, params, opts) {
     throw new Error('\'origin\' not set in converter.yaml');
   }
 
-  const mappedPath = mapInbound(path, mappingCfg);
+  const mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
   const originUrl = new URL(mappedPath, origin);
 
   if (queryString) {
@@ -43,12 +43,11 @@ export default async function fetchContent(state, params, opts) {
   }
 
   const [contentType] = (resp.headers.get('content-type') || 'text/html').split(';');
-  const blob = isBinary(contentType)
-    // for binaries we spool the response base64 encoded
-    ? Buffer.from(await resp.arrayBuffer()).toString('base64')
-    : await resp.text();
+  const contentLength = resp.headers.get('content-length') || -1;
+  // for binaries return the readable stream
+  const blob = isBinary(contentType) ? resp.body : await resp.text();
 
   return {
-    ...state, originUrl, blob, contentType,
+    ...state, originUrl, blob, contentType, contentLength,
   };
 }

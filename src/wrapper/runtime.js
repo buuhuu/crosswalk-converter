@@ -32,40 +32,43 @@ export function toRuntime(pipe, opts = {}) {
       path = path.substring(0, path.length - 3);
     }
 
-    // Forward to a branch-action if applicable (on a /drafts folder) and available, aka. deployed
-    // in the same package. For example consider the following actions, main deployed from the main
-    // branch and issue-123 from the issue-123 branch, but both in the same package converter:
-    // - converter/main
-    // - converter/issue-123
-    // Incoming requests to /drafts/issue-123/... will be dispached to the converter/issue-123
-    // action, instead of being handled by the converter/main action. Any /drafts folder that has
-    // no matching branch will fall through.
+    if (owApiHost && owApiKey && owNamespace && actionPath) {
+      // Forward to a branch-action if applicable (on a /drafts folder) and available, aka. deployed
+      // in the same package. For example consider the following actions, main deployed from the
+      // main branch and issue-123 from the issue-123 branch, but both in the same package
+      // converter:
+      // - converter/main
+      // - converter/issue-123
+      // Incoming requests to /drafts/issue-123/... will be dispached to the converter/issue-123
+      // action, instead of being handled by the converter/main action. Any /drafts folder that has
+      // no matching branch will fall through.
 
-    // '/<actionNamespace>/<actionName>'
-    // where actionNamespace is <namespace>(/<packageName>)?
-    const [, actionNamespace, actionName] = actionPath.match(/\/(.+)\/([^/]+)$/);
-    const draftsMatch = path.match(/^\/drafts\/([^/]+)(\/.+)$/);
-    const openwhisk = ow({ api_key: owApiKey, apihost: owApiHost, namespace: owNamespace });
-    // filter for actions only in the same action namespace (namespace & package) and exclude self
-    const actions = (await openwhisk.actions.list())
-      .filter(({ namespace, name }) => namespace === actionNamespace && name !== actionName);
+      // '/<actionNamespace>/<actionName>'
+      // where actionNamespace is <namespace>(/<packageName>)?
+      const [, actionNamespace, actionName] = actionPath.match(/\/(.+)\/([^/]+)$/);
+      const draftsMatch = path.match(/^\/drafts\/([^/]+)(\/.+)$/);
+      const openwhisk = ow({ api_key: owApiKey, apihost: owApiHost, namespace: owNamespace });
+      // filter for actions only in the same action namespace (namespace & package) and exclude self
+      const actions = (await openwhisk.actions.list())
+        .filter(({ namespace, name }) => namespace === actionNamespace && name !== actionName);
 
-    if (draftsMatch) {
-      const [, draftsFolder] = draftsMatch;
-      if (draftsFolder !== actionName) {
-        // try forwarding the request to a different action only if the draftsFolder name is
-        // different than the actionName
+      if (draftsMatch) {
+        const [, draftsFolder] = draftsMatch;
+        if (draftsFolder !== actionName) {
+          // try forwarding the request to a different action only if the draftsFolder name is
+          // different than the actionName
 
-        // select the action that matches the drafts folder name
-        const branchAction = actions.find(({ name }) => name === draftsFolder);
-        if (branchAction) {
-          // forward to the branch action
-          return openwhisk.actions.invoke({
-            ...branchAction,
-            blocking: true,
-            result: true,
-            params,
-          });
+          // select the action that matches the drafts folder name
+          const branchAction = actions.find(({ name }) => name === draftsFolder);
+          if (branchAction) {
+            // forward to the branch action
+            return openwhisk.actions.invoke({
+              ...branchAction,
+              blocking: true,
+              result: true,
+              params,
+            });
+          }
         }
       }
     }

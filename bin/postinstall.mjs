@@ -77,7 +77,8 @@ async function copyFiles() {
       to: `${converterPath}/webpack.config.js`,
       checksums: [
         '36c91744646fcb80b83fb6e6c9928c1a',
-        '71795d8b21c86aec377963b3ae98d1f8',
+        '562dbe7dfb28c580d71cb7fa38422aad',
+        'd6a32f5e1f01c3a5e9e950c5c1c6e0ab',
       ],
     },
     {

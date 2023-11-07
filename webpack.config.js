@@ -25,7 +25,7 @@ const DEFAULT_CONFIG = {
     },
   },
   externals: [
-    'node-fetch',
+    'import node-fetch',
     'openwhisk',
     'express',
   ],

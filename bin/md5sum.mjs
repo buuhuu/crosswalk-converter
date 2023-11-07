@@ -10,23 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-import remarkGridTable from '@adobe/remark-gridtables';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
+import path from 'path';
+import fs from 'fs';
+import crypto from 'crypto';
 
-export default function parseMd(state) {
-  const { md } = state;
+const [, , filePath] = process.argv;
 
-  if (typeof md !== 'undefined') {
-    const mdast = unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkGridTable)
-      .parse(md);
+const resolvedFilePath = path.resolve(filePath);
+const fileExists = fs.existsSync(resolvedFilePath);
 
-    return { ...state, mdast };
-  }
+if (!fileExists) {
+  console.log(`file not found: ${resolvedFilePath}`);
 
-  return state;
+  console.log();
+  console.log('Usage: node bin/md5sum.mjs <file>');
+  process.exit(2);
 }
+
+function md5sum(str) {
+  return crypto.createHash('md5').update(str, 'utf-8').digest('hex');
+}
+
+const str = fs.readFileSync(resolvedFilePath, { encoding: 'utf-8' });
+
+console.log(`${filePath}: ${md5sum(str)}`);

@@ -10,23 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import remarkGridTable from '@adobe/remark-gridtables';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
+/* eslint-disable import/prefer-default-export */
 
-export default function parseMd(state) {
-  const { md } = state;
+import { pipeline, toRuntime } from '../src/index.js';
+import converterCfg from './converter.yaml';
+import mappingCfg from './paths.yaml';
 
-  if (typeof md !== 'undefined') {
-    const mdast = unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkGridTable)
-      .parse(md);
-
-    return { ...state, mdast };
-  }
-
-  return state;
+export function main(...args) {
+  return pipeline()
+    .wrap(toRuntime, { converterCfg, mappingCfg })
+    .apply(this, args);
 }

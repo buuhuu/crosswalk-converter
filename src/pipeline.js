@@ -19,6 +19,7 @@ import html2md from './steps/html2md.js';
 import parseMd from './steps/parse-md.js';
 import transformMdast from './steps/transform-mdast.js';
 import stringifyMdast from './steps/stringify-mdast.js';
+import blobEncode from './steps/blob-encode.js';
 
 export function pipeline() {
   return pipe()
@@ -27,5 +28,6 @@ export function pipeline() {
     .use(parseMd)
     .use(transformMdast)
     .use(stringifyMdast)
-    .use(md2html, (_, params) => !params.md);
+    .use(md2html, (_, params) => !params.md)
+    .use(blobEncode);
 }
