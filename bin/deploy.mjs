@@ -59,18 +59,22 @@ async function deploy() {
     }
   }
   // 2. deploy action
-  const action = fs.readFileSync(resolvedZipFilePath);
+  const actionCode = fs.readFileSync(resolvedZipFilePath);
+  let action;
   try {
     await openwhisk.actions.get({ name: `${packageName}/${actionName}` });
     console.log(`Action '${packageName}/${packageName}' exists`);
     console.log(`Updating action '${packageName}/${actionName}' ...`);
-    await openwhisk.actions.update({ name: `${packageName}/${actionName}`, action });
+    action = await openwhisk.actions.update({
+      name: `${packageName}/${actionName}`,
+      action: actionCode,
+    });
   } catch (ex) {
     if (ex.statusCode === 404) {
       console.log(`Creating action '${packageName}/${actionName}' ...`);
-      await openwhisk.actions.create({
+      action = await openwhisk.actions.create({
         name: `${packageName}/${actionName}`,
-        action,
+        action: actionCode,
         kind: 'nodejs:default',
         annotations: {
           'web-export': true,
@@ -81,6 +85,10 @@ async function deploy() {
       });
     } else {
       throw ex;
+    }
+  } finally {
+    if (action) {
+      console.log(`Deployed action ${action.namespace}/${action.name}`);
     }
   }
 }
