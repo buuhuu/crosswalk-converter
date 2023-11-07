@@ -20,8 +20,8 @@ const mediaTypes = {
   'application/gnutar': true,
   'application/java-archive': true,
   'application/javascript': false,
-  'application/json': true, // we treat JSON as binary, since its encoding is not variable but defined by RFC4627
-  'application/json-patch+json': true, // we treat JSON as binary, since its encoding is not variable but defined by RFC4627
+  'application/json': false, // we treat JSON as binary, since its encoding is not variable but defined by RFC4627
+  'application/json-patch+json': false, // we treat JSON as binary, since its encoding is not variable but defined by RFC4627
   'application/lha': true,
   'application/lzx': true,
   'application/mspowerpoint': true,

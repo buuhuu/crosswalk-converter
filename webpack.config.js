@@ -24,6 +24,10 @@ const DEFAULT_CONFIG = {
       type: 'umd',
     },
   },
+  externals: [
+    'import node-fetch',
+    'express',
+  ],
   resolve: {
     modules: [
       'node_modules',

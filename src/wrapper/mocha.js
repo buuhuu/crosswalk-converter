@@ -15,8 +15,9 @@ import path from 'path';
 import nock from 'nock';
 import assert from 'assert';
 
+export const DEFAULT_ORIGIN = 'http://www.test.run';
 export const DEFAULT_MAPPING_CFG = { mappings: ['/:/'] };
-export const DEFAULT_CONVERTER_CFG = { origin: 'http://www.test.run', liveUrls: [] };
+export const DEFAULT_CONVERTER_CFG = { origin: DEFAULT_ORIGIN };
 
 export function toMocha(pipe, opts = {}) {
   const {
@@ -38,7 +39,7 @@ export function toMocha(pipe, opts = {}) {
         const expectedHtml = await fs.readFile(path.resolve(fixturesFolder, expected), { encoding: 'utf-8' });
         const requestPath = `/${given}`;
 
-        nock('http://www.test.run').get(requestPath).reply(200, givenHtml);
+        nock(converterCfg.origin).get(requestPath).reply(200, givenHtml);
 
         const { error, html } = await pipe.run(
           { path: requestPath },

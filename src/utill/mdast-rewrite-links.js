@@ -43,7 +43,8 @@ export function rewriteLinks(options = {}) {
     const { mappingCfg, converterCfg } = options;
     let { origin, liveUrls = [] } = converterCfg || {};
     if (!([] instanceof Array)) liveUrls = [liveUrls];
-    if (origin && liveUrls.length) {
+    if (!liveUrls.length) liveUrls.push(origin);
+    if (origin) {
       origin = new URL(origin);
       liveUrls = liveUrls.map((url) => new URL(url));
       const identifiers = new Set();

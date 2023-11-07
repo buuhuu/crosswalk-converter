@@ -14,5 +14,8 @@ import { toMarkdown } from 'mdast-util-to-markdown';
 
 export default async function stringifyMdast(state) {
   const { mdast } = state;
-  return { ...state, md: toMarkdown(mdast) };
+  if (mdast) {
+    return { ...state, md: toMarkdown(mdast) };
+  }
+  return state;
 }

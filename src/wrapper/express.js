@@ -23,6 +23,8 @@ import { visit, SKIP } from 'unist-util-visit';
 import { h } from 'hastscript';
 import fetch from 'node-fetch';
 import { toRuntime } from './runtime.js';
+import { isBinary } from '../utill/media-utils.js';
+import { toBuffer } from '../steps/blob-encode.js';
 
 const { AEM_USER, AEM_PASSWORD } = process.env;
 const LOCALHOST = 'http://127.0.0.1';
@@ -37,6 +39,11 @@ const LOCALHOST = 'http://127.0.0.1';
  */
 export async function md2html(state, _params, opts) {
   const { md } = state;
+
+  if (!md) {
+    return state;
+  }
+
   const { port, originalUrl, headHtml } = opts;
   const url = new URL(`${LOCALHOST}:${port}${originalUrl}`);
   const req = new PipelineRequest(url, { headers: { host: url.host }, body: '' });
@@ -144,12 +151,28 @@ async function fixHtml(state) {
   return { ...state, html: toHtml(hast) };
 }
 
+/**
+ * Simplified blobEncode that just returns a Buffer of binary content.
+ *
+ * @param {*} state
+ * @returns
+ */
+async function blobEncode(state) {
+  const { blob, contentType } = state;
+  if (blob && isBinary(contentType)) {
+    return { ...state, blob: await toBuffer(blob) };
+  }
+  return state;
+}
+
 export function toExpress(pipe, opts = {}) {
   pipe = pipe
     // replace md2html with the one defined for express
     .use(md2html, (_, params) => !params.md)
     // apply html fixes if not rendering md
-    .use(fixHtml, (_, params) => !params.md);
+    .use(fixHtml, (_, params) => !params.md)
+    // do not encode blobs
+    .use(blobEncode);
 
   return function (req, res) {
     // eslint-disable-next-line prefer-const
@@ -172,7 +195,7 @@ export function toExpress(pipe, opts = {}) {
     }
 
     // serve everything that is not html (has an extension) from the local dev server
-    if (path.indexOf('.') >= 0) {
+    if (path.match(/\.(js|css|json|yaml|html)$/)) {
       // request from local dev server
       fetch(`${LOCALHOST}:3000${path}`)
         .then((devResponse) => {

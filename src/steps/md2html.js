@@ -21,31 +21,36 @@ import fixSections from '@adobe/helix-html-pipeline/src/steps/fix-sections.js';
 
 export default async function md2html(state) {
   const { mdast } = state;
-  const main = mdast2hast(mdast, {
-    handlers: {
-      ...defaultHandlers,
-      [TYPE_TABLE]: mdast2hastGridTablesHandler(),
-    },
-    allowDangerousHtml: true,
-  });
-  const content = { hast: main };
 
-  fixSections({ content });
-  createPageBlocks({ content });
+  if (mdast) {
+    const main = mdast2hast(mdast, {
+      handlers: {
+        ...defaultHandlers,
+        [TYPE_TABLE]: mdast2hastGridTablesHandler(),
+      },
+      allowDangerousHtml: true,
+    });
+    const content = { hast: main };
 
-  const doc = h('html', [
-    h('body', [
-      h('header', []),
-      h('main', content.hast),
-      h('footer', [])]),
-  ]);
+    fixSections({ content });
+    createPageBlocks({ content });
 
-  raw(doc);
-  rehypeFormat()(doc);
+    const doc = h('html', [
+      h('body', [
+        h('header', []),
+        h('main', content.hast),
+        h('footer', [])]),
+    ]);
 
-  return {
-    ...state,
-    html: toHtml(doc, { upperDoctype: true, allowDangerousHtml: true }),
-    contentType: 'text/html',
-  };
+    raw(doc);
+    rehypeFormat()(doc);
+
+    return {
+      ...state,
+      html: toHtml(doc, { upperDoctype: true, allowDangerousHtml: true }),
+      contentType: 'text/html',
+    };
+  }
+
+  return state;
 }

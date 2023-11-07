@@ -20,13 +20,17 @@ export default async function transformMdast(state, _params, opts) {
   let { mdast } = state;
   const transformers = opts.transformers || DEFAULT_TRANSFORMERS;
 
-  let processor = unified();
-  // eslint-disable-next-line no-restricted-syntax
-  for (const transformer of transformers) {
-    processor = processor.use(transformer, opts);
+  if (mdast) {
+    let processor = unified();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const transformer of transformers) {
+      processor = processor.use(transformer, opts);
+    }
+
+    mdast = await processor.run(mdast);
+
+    return { ...state, mdast };
   }
 
-  mdast = await processor.run(mdast);
-
-  return { ...state, mdast };
+  return state;
 }
