@@ -16,6 +16,8 @@
 import ow from 'openwhisk';
 
 export function toRuntime(pipe, opts = {}) {
+  const { converterCfg = {} } = opts;
+
   return async function (params) {
     const {
       __OW_API_HOST: owApiHost,
@@ -33,35 +35,32 @@ export function toRuntime(pipe, opts = {}) {
     }
 
     if (owApiHost && owApiKey && owNamespace && actionPath) {
-      // Forward to a branch-action if applicable (on a /drafts folder) and available, aka. deployed
+      // Forward to a branch-action if applicable (on a /branch folder) and available, aka. deployed
       // in the same package. For example consider the following actions, main deployed from the
       // main branch and issue-123 from the issue-123 branch, but both in the same package
       // converter:
       // - converter/main
       // - converter/issue-123
-      // Incoming requests to /drafts/issue-123/... will be dispached to the converter/issue-123
-      // action, instead of being handled by the converter/main action. Any /drafts folder that has
+      // Incoming requests to /branch/issue-123/... will be dispached to the converter/issue-123
+      // action, instead of being handled by the converter/main action. Any /branch folder that has
       // no matching branch will fall through.
 
       // '/<actionNamespace>/<actionName>'
       // where actionNamespace is <namespace>(/<packageName>)?
       const [, actionNamespace, actionName] = actionPath.match(/\/(.+)\/([^/]+)$/);
-      const draftsMatch = path.match(/^\/drafts\/([^/]+)(\/.+)$/);
+      const branchMatch = path.match(/^\/branch\/([^/]+)(\/.+)$/);
       const openwhisk = ow({ api_key: owApiKey, apihost: owApiHost, namespace: owNamespace });
       // filter for actions only in the same action namespace (namespace & package) and exclude self
       const actions = (await openwhisk.actions.list())
         .filter(({ namespace, name }) => namespace === actionNamespace && name !== actionName);
 
-      if (draftsMatch) {
-        const [, draftsFolder] = draftsMatch;
-        if (draftsFolder !== actionName) {
-          // try forwarding the request to a different action only if the draftsFolder name is
-          // different than the actionName
-
-          // select the action that matches the drafts folder name
-          const branchAction = actions.find(({ name }) => name === draftsFolder);
-          if (branchAction) {
-            // forward to the branch action
+      if (branchMatch) {
+        const [, branchName, subPath] = branchMatch;
+        const branchAction = actions.find(({ name }) => name === branchName);
+        if (branchAction) {
+          if (branchName !== actionName) {
+            // forward the request to the branch action only if the branchName is different than
+            // the current actionName
             return openwhisk.actions.invoke({
               ...branchAction,
               blocking: true,
@@ -70,6 +69,22 @@ export function toRuntime(pipe, opts = {}) {
             });
           }
         }
+
+        if (!branchAction || branchName === 'main') {
+          // if not continue with the current action but use the subpath as path
+          path = subPath;
+        }
+      }
+
+      const { owner, repo } = converterCfg.multibranch;
+      if (owner && repo && !branchMatch && actionName === 'main') {
+        // the main action, if configured for multi branch, will preview the current path again for
+        // every other action in the package
+        actions.forEach(({ name }) => {
+          const adminUrl = `https://admin.hlx.page/preview/${owner}/${repo}/main/branch/${name}${path}`;
+          console.log(`POST ${adminUrl}`);
+          fetch(adminUrl, { method: 'POST', headers: { authorization } });
+        });
       }
     }
 
@@ -83,8 +98,17 @@ export function toRuntime(pipe, opts = {}) {
       );
       const statusCode = error?.code || 200;
       const body = error?.message || html || md || blob;
-      const { origin } = opts.converterCfg || {};
-      return { statusCode, body, headers: { 'content-type': contentType, 'x-html2md-img-src': origin } };
+      const { origin } = converterCfg;
+      return {
+        statusCode,
+        body,
+        headers: {
+          'content-type': contentType,
+          'x-html2md-img-src': origin,
+          'x-converter-action': actionPath,
+          'x-converter-path': path,
+        },
+      };
     } catch (ex) {
       return { statusCode: 500, body: `${ex.stack}`, headers: { 'content-type': 'text/plain' } };
     }
