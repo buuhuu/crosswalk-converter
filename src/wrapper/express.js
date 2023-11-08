@@ -197,7 +197,7 @@ export function toExpress(pipe, opts = {}) {
     }
 
     // serve everything that is not html (has an extension) from the local dev server
-    if (path.match(/\.(js|css|json|yaml|html)$/)) {
+    if (path.match(/\.(js|css|json|yaml|html|ico)$/)) {
       // request from local dev server
       fetch(`${LOCALHOST}:3000${path}`)
         .then((devResponse) => {
