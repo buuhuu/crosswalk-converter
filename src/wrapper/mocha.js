@@ -35,6 +35,11 @@ export function toMocha(pipe, opts = {}) {
 
   return async function (fixtures) {
     fixtures.forEach(([given, expected]) => {
+      if (!expected) {
+        const extensionPos = given.lastIndexOf('.');
+        // eslint-disable-next-line no-param-reassign
+        expected = `${given.substring(0, extensionPos)}-converted${given.substring(extensionPos)}`;
+      }
       indivdualTest(`conversts ${given} to ${expected}`, async () => {
         const givenHtml = await fs.readFile(path.resolve(fixturesFolder, given), { encoding: 'utf-8' });
         const expectedHtml = await fs.readFile(path.resolve(fixturesFolder, expected), { encoding: 'utf-8' });

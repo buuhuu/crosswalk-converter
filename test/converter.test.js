@@ -21,7 +21,7 @@ describe('Converter', async () => {
   const testRunner = pipeline().wrap(toMocha, { transform, fixturesFolder });
 
   await testRunner([
-    ['empty.html', 'empty-converted.html'],
-    ['block.html', 'block-converted.html'],
+    ['empty.html'],
+    ['block.html'],
   ]);
 });
