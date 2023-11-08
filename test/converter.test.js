@@ -13,13 +13,15 @@
 import path from 'path';
 import { pipeline } from '../src/pipeline.js';
 import { toMocha } from '../src/wrapper/mocha.js';
+import transform from './import.js';
 
 describe('Converter', async () => {
   // eslint-disable-next-line no-undef
   const fixturesFolder = path.resolve(__testdir, 'fixtures');
-  const testRunner = pipeline().wrap(toMocha, { fixturesFolder });
+  const testRunner = pipeline().wrap(toMocha, { transform, fixturesFolder });
 
   await testRunner([
     ['empty.html', 'empty-converted.html'],
+    ['block.html', 'block-converted.html'],
   ]);
 });

@@ -26,6 +26,7 @@ export function toMocha(pipe, opts = {}) {
     mappingCfg = DEFAULT_MAPPING_CFG,
     converterCfg = DEFAULT_CONVERTER_CFG,
     silent = true,
+    ...rest
   } = opts;
 
   if (silent) {
@@ -44,7 +45,7 @@ export function toMocha(pipe, opts = {}) {
         const { error, html } = await pipe.run(
           { path: requestPath },
           {},
-          { mappingCfg, converterCfg },
+          { mappingCfg, converterCfg, ...rest },
         );
 
         assert(!error, 'no error expected');

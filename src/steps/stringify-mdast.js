@@ -10,12 +10,33 @@
  * governing permissions and limitations under the License.
  */
 
-import { toMarkdown } from 'mdast-util-to-markdown';
+import remarkGridTable from '@adobe/remark-gridtables';
+import formatPlugin from '@adobe/helix-importer/src/importer/mdast-to-md-format-plugin.js';
+import remarkGfm from 'remark-gfm';
+import stringify from 'remark-stringify';
+import { unified } from 'unified';
 
 export default async function stringifyMdast(state) {
   const { mdast } = state;
+
   if (mdast) {
-    return { ...state, md: toMarkdown(mdast) };
+    const md = await unified()
+      .use(stringify, {
+        strong: '*',
+        emphasis: '_',
+        bullet: '-',
+        fence: '`',
+        fences: true,
+        incrementListMarker: true,
+        rule: '-',
+        ruleRepetition: 3,
+        ruleSpaces: false,
+      })
+      .use(remarkGridTable)
+      .use(remarkGfm)
+      .use(formatPlugin)
+      .stringify(mdast);
+    return { ...state, md };
   }
   return state;
 }
