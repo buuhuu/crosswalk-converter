@@ -124,6 +124,16 @@ async function copyFiles() {
       to: `${converterPath}/.eslintrc.js`,
       checksums: ['70d00a37ccf790f46074ca75972ed7e7'],
     },
+    {
+      fron: 'template/deploy-converter.yaml',
+      to: `${projectRoot}/.github/workflows/deploy-converter.yaml`,
+      checksums: ['154249ad3371e7acbf661e3f68985650'],
+    },
+    {
+      fron: 'template/undeploy-converter.yaml',
+      to: `${projectRoot}/.github/workflows/undeploy-converter.yaml`,
+      checksums: ['914d0956e0d54482be536e6f0249b993'],
+    },
   ];
 
   await Promise.all(files.map(({ from, to, checksums }) => copyFile(from, to, checksums)));
