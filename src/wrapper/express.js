@@ -26,7 +26,7 @@ import { toRuntime } from './runtime.js';
 import { isBinary } from '../utill/media-utils.js';
 import { toBuffer } from '../steps/blob-encode.js';
 
-const { AEM_USER, AEM_PASSWORD } = process.env;
+const { AEM_USER, AEM_PASSWORD, AEM_TOKEN } = process.env;
 const LOCALHOST = 'http://127.0.0.1';
 
 /**
@@ -179,8 +179,10 @@ export function toExpress(pipe, opts = {}) {
     let { path } = req;
     const params = {};
     const requestHeaders = {};
-
-    if (AEM_USER && AEM_PASSWORD) {
+    
+    if (AEM_TOKEN) {
+      requestHeaders.authorization = `Bearer ${AEM_TOKEN}`;
+    } else if (AEM_USER && AEM_PASSWORD) {
       requestHeaders.authorization = `Basic ${Buffer.from(`${AEM_USER}:${AEM_PASSWORD}`).toString('base64')}`;
     }
 
@@ -225,7 +227,7 @@ export function toExpress(pipe, opts = {}) {
       const fn = toRuntime(pipe, { ...opts, originalUrl: req.originalUrl });
       fn({
         __ow_path: path,
-        __ow_headesr: { ...requestHeaders },
+        __ow_headers: { ...requestHeaders },
         __ow_query: queryString,
         ...params,
       }).then(({ statusCode, body, headers }) => {

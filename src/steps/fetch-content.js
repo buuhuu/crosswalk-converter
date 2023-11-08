@@ -24,7 +24,11 @@ export default async function fetchContent(state, params, opts) {
     throw new Error('\'origin\' not set in converter.yaml');
   }
 
-  const mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
+  let mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
+  // if the mapped path has no extension, add .html
+  if (!mappedPath.includes('.') && !mappedPath.endsWith('/')) {
+    mappedPath += '.html';
+  }
   const originUrl = new URL(mappedPath, origin);
 
   if (queryString) {
