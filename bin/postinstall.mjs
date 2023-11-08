@@ -99,7 +99,10 @@ async function copyFiles() {
     {
       from: 'template/converter.test.js',
       to: `${converterPath}/test/converter.test.js`,
-      checksums: ['c2fcf3c7f759e27ed3e9c39659484e0a'],
+      checksums: [
+        'c2fcf3c7f759e27ed3e9c39659484e0a',
+        '19172e89f964caba268061814d754eca',
+      ],
     },
     {
       from: 'test/setup-env.esm.mjs',

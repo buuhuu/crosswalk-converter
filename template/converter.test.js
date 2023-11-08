@@ -12,11 +12,19 @@
 
 import path from 'path';
 import { pipeline, toMocha } from 'crosswalk-converter';
+import converterCfg from '../../../../converter.yaml';
+import mappingCfg from '../../../../paths.yaml';
+import transform from '../../../importer/import.js';
 
 describe('Converter', async () => {
   // eslint-disable-next-line no-undef
   const fixturesFolder = path.resolve(__testdir, 'fixtures');
-  const testRunner = pipeline().wrap(toMocha, { fixturesFolder });
+  const testRunner = pipeline().wrap(toMocha, {
+    transform,
+    converterCfg,
+    mappingCfg,
+    fixturesFolder,
+  });
 
   await testRunner([
     ['empty.html', 'empty-converted.html'],
