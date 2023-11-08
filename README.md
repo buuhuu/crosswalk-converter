@@ -9,7 +9,7 @@ The converter must be installed in a project created from the [aem-boilerplate](
 Run the following in the root of the project.
 
 ```
-npm install --save-dev https://github.com/buuhuu/crosswalk-converter
+npm install --save https://github.com/buuhuu/crosswalk-converter
 ```
 
 During the installation a few files will be copied into your project, some of them may be changed and others not.
