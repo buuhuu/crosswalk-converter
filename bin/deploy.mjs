@@ -60,6 +60,15 @@ async function deploy() {
   }
   // 2. deploy action
   const actionCode = fs.readFileSync(resolvedZipFilePath);
+  const annotations = {
+    'web-export': true,
+    'require-adobe-auth': false,
+    'raw-http': true,
+    final: true,
+    'provide-api-key': true,
+  };
+  const kind = 'nodejs:18';
+
   let action;
   try {
     await openwhisk.actions.get({ name: `${packageName}/${actionName}` });
@@ -68,6 +77,8 @@ async function deploy() {
     action = await openwhisk.actions.update({
       name: `${packageName}/${actionName}`,
       action: actionCode,
+      kind,
+      annotations,
     });
   } catch (ex) {
     if (ex.statusCode === 404) {
@@ -75,13 +86,8 @@ async function deploy() {
       action = await openwhisk.actions.create({
         name: `${packageName}/${actionName}`,
         action: actionCode,
-        kind: 'nodejs:default',
-        annotations: {
-          'web-export': true,
-          'require-adobe-auth': false,
-          'raw-http': true,
-          final: true,
-        },
+        kind,
+        annotations,
       });
     } else {
       throw ex;

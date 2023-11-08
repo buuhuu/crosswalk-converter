@@ -78,6 +78,7 @@ async function copyFiles() {
       checksums: [
         '36c91744646fcb80b83fb6e6c9928c1a',
         '562dbe7dfb28c580d71cb7fa38422aad',
+        'd6a32f5e1f01c3a5e9e950c5c1c6e0ab',
       ],
     },
     {
@@ -140,6 +141,7 @@ async function updatePackageJson() {
     'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
     'converter:serve:server': `cd ${converterPath} && nodemon --inspect ./dist/index.js --watch ./dist`,
     'converter:deploy': `node node_modules/crosswalk-converter/bin/deploy.mjs ${converterPath}/dist/index.js.zip`,
+    'converter:undeploy': 'node node_modules/crosswalk-converter/bin/undeploy.mjs',
   };
 
   packageJson.scripts = { ...packageJson.scripts, ...scripts };
