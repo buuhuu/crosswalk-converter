@@ -26,7 +26,7 @@ export default async function fetchContent(state, params, opts) {
 
   let mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
   // if the mapped path has no extension, add .html
-  if (!!suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
+  if (suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
     mappedPath += '.html';
   }
   const originUrl = new URL(mappedPath, origin);
