@@ -12,11 +12,14 @@
 
 import 'dotenv/config.js';
 import ow from 'openwhisk';
+import github from '@actions/github';
 
 const {
   WSK_AUTH,
   WSK_NAMESPACE,
   WSK_APIHOST = 'adobeioruntime.net',
+  GITHUB_TOKEN,
+  GITHUB_REPOSITORY,
 } = process.env;
 
 if (!WSK_AUTH || !WSK_NAMESPACE) {
@@ -24,7 +27,7 @@ if (!WSK_AUTH || !WSK_NAMESPACE) {
 }
 
 // default older then to 5d
-const [, , givenName, olderThenHours = 5 * 24] = process.argv;
+const [, , givenName, filterInput = 5 * 24] = process.argv;
 const [packageName, actionName] = givenName?.split('/') || [];
 
 if (!packageName) {
@@ -36,13 +39,42 @@ if (!packageName) {
 
 const openwhisk = ow({ api_key: WSK_AUTH, namespace: WSK_NAMESPACE, apihost: WSK_APIHOST });
 
+async function createFilter() {
+  const filterInputInt = parseInt(filterInput, 10);
+  if (!Number.isNaN(filterInputInt)) {
+    // filter by updated only when the 2nd argument is a number
+    return ({ updated }) => updated < (Date.now() - filterInputInt * 60 * 60 * 1000);
+  }
+
+  if (filterInput.startsWith('github:')) {
+    // filter for github
+    if (!GITHUB_TOKEN || !GITHUB_REPOSITORY) {
+      throw new Error('GITHUB_TOKEN or GITHUB_REPOSITORY not set.');
+    }
+    const gh = github.getOctokit(GITHUB_TOKEN);
+    if (filterInput === 'github:open_pull_request') {
+      const [owner, repo] = GITHUB_REPOSITORY.split('/');
+      const pullRequests = await gh.rest.pulls.list({ owner, repo, state: 'open' });
+      if (pullRequests.status === 200) {
+        const openBranches = pullRequests.data.map((pr) => pr.head.ref);
+        return ({ name }) => !openBranches.some((branchName) => name === branchName);
+      }
+    }
+  }
+
+  // include nothing if no filter;
+  console.log(`unkown filter: ${filterInput}`);
+  return () => false;
+}
+
 async function undeploy() {
-  const updatedBefore = Date.now() - olderThenHours * 60 * 60 * 1000;
+  const filter = await createFilter();
+
   const actions = (await openwhisk.actions.list({ namespace: `${WSK_NAMESPACE}/${packageName}` }))
     .filter(({ name }) => !actionName || name === actionName)
     // only undeploy main if explicitly asked for
     .filter(({ name }) => name !== 'main' || actionName === 'main')
-    .filter(({ updated }) => updated < updatedBefore);
+    .filter(filter);
 
   await Promise.all([actions.map(async (action) => {
     await openwhisk.actions.delete(action);

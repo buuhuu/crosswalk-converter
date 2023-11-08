@@ -21,6 +21,7 @@
   "author": "Dirk Rudolph <drudolph@adobe.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@actions/github": "^6.0.0",
     "@adobe/helix-html-pipeline": "^4.1.10",
     "@adobe/helix-importer": "^2.9.40",
     "@adobe/mdast-util-gridtables": "^2.0.2",
