@@ -42,7 +42,7 @@ export function rewriteLinks(options = {}) {
   return (tree) => {
     const { mappingCfg, converterCfg } = options;
     let { origin, liveUrls = [] } = converterCfg || {};
-    if (!([] instanceof Array)) liveUrls = [liveUrls];
+    if (!Array.isArray(liveUrls)) liveUrls = [liveUrls];
     if (!liveUrls.length) liveUrls.push(origin);
     if (origin) {
       origin = new URL(origin);
