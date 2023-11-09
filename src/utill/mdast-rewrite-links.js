@@ -46,7 +46,9 @@ export function rewriteLinks(options = {}) {
     if (!liveUrls.length) liveUrls.push(origin);
     if (origin) {
       origin = new URL(origin);
-      liveUrls = liveUrls.map((url) => new URL(url));
+      liveUrls = liveUrls
+        .filter((url) => !!url)
+        .map((url) => new URL(url));
       const identifiers = new Set();
       visit(tree, ['link', 'imageReference', 'definition'], (node) => {
         const { type, identifier, url } = node;
