@@ -179,7 +179,7 @@ export function toExpress(pipe, opts = {}) {
     let { path } = req;
     const params = {};
     const requestHeaders = {};
-    
+
     if (AEM_TOKEN) {
       requestHeaders.authorization = `Bearer ${AEM_TOKEN}`;
     } else if (AEM_USER && AEM_PASSWORD) {
@@ -196,8 +196,9 @@ export function toExpress(pipe, opts = {}) {
       path = `${path.substring(0, path.length - 11)}`;
     }
 
-    // serve everything that is not html (has an extension) from the local dev server
-    if (path.match(/\.(js|css|json|yaml|html|ico|woff2)$/)) {
+    // serve everything that is code from the local dev server
+    // - using extensions and typical path patterns
+    if (path.match(/\.(js|css|json|yaml|html)$/) || path.match(/^\/(scripts|styles|icons|fonts|blocks|tools)\//)) {
       // request from local dev server
       fetch(`${LOCALHOST}:3000${path}`)
         .then((devResponse) => {

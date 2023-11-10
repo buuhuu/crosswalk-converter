@@ -152,7 +152,7 @@ async function updatePackageJson() {
     'converter:test': `cd ${converterPath} && instant-mocha --spec test/**/*.test.js --require test/setup-env.esm.mjs --timeout 10000`,
     'converter:serve': 'npm-run-all converter:build --parallel converter:serve:*',
     'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
-    'converter:serve:server': `cd ${converterPath} && nodemon --inspect ./dist/index.js --watch ./dist`,
+    'converter:serve:server': `nodemon -r dotenv/config --inspect ${converterPath}/dist/index.js --watch ${converterPath}/dist`,
     'converter:deploy': `node node_modules/crosswalk-converter/bin/deploy.mjs ${converterPath}/dist/index.js.zip`,
     'converter:undeploy': 'node node_modules/crosswalk-converter/bin/undeploy.mjs',
   };
