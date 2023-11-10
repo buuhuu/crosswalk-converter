@@ -18,13 +18,17 @@ export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
   const { authorization } = params;
   const { converterCfg, mappingCfg } = opts;
-  const { origin } = converterCfg || {};
+  const { origin, suffix } = converterCfg || {};
 
   if (!origin) {
     throw new Error('\'origin\' not set in converter.yaml');
   }
 
-  const mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
+  let mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
+  // if the mapped path has no extension, add .html
+  if (suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
+    mappedPath += '.html';
+  }
   const originUrl = new URL(mappedPath, origin);
 
   if (queryString) {
