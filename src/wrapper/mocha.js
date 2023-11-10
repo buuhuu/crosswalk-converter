@@ -14,6 +14,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import nock from 'nock';
 import assert from 'assert';
+import { mapInbound } from '../utill/mapping.js';
 
 export const DEFAULT_ORIGIN = 'http://www.test.run';
 export const DEFAULT_MAPPING_CFG = { mappings: ['/:/'] };
@@ -45,7 +46,7 @@ export function toMocha(pipe, opts = {}) {
         const expectedHtml = await fs.readFile(path.resolve(fixturesFolder, expected), { encoding: 'utf-8' });
         const requestPath = `/${given}`;
 
-        nock(converterCfg.origin).get(requestPath).reply(200, givenHtml);
+        nock(converterCfg.origin).get(mapInbound(requestPath, mappingCfg)).reply(200, givenHtml);
 
         const { error, html } = await pipe.run(
           { path: requestPath },
