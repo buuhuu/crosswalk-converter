@@ -103,7 +103,7 @@ export function toRuntime(pipe, opts = {}) {
         statusCode,
         body,
         headers: {
-          'content-type': contentType,
+          'content-type': contentType || 'text/plain',
           'x-html2md-img-src': origin,
           'x-converter-action': actionPath,
           'x-converter-path': path,
