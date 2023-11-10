@@ -198,7 +198,7 @@ export function toExpress(pipe, opts = {}) {
 
     // serve everything that is code from the local dev server
     // - using extensions and typical path patterns
-    if (path.match(/\.(js|css|json|yaml|html)$/) || path.match(/^\/(scripts|styles|icons|fonts|blocks|tools)\//)) {
+    if (path.match(/\.(js|css|json|yaml|html|ico|woff2)$/) || path.match(/^\/(scripts|styles|icons|fonts|blocks|tools)\//)) {
       // request from local dev server
       fetch(`${LOCALHOST}:3000${path}`)
         .then((devResponse) => {
