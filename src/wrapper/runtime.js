@@ -76,7 +76,7 @@ export function toRuntime(pipe, opts = {}) {
         }
       }
 
-      const { owner, repo } = converterCfg.multibranch;
+      const { owner, repo } = converterCfg.multibranch || {};
       if (owner && repo && !branchMatch && actionName === 'main') {
         // the main action, if configured for multi branch, will preview the current path again for
         // every other action in the package
