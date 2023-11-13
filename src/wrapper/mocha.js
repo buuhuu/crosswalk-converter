@@ -35,7 +35,13 @@ export function toMocha(pipe, opts = {}) {
   }
 
   return async function (fixtures) {
-    fixtures.forEach(([given, expected]) => {
+    fixtures.forEach((args) => {
+      if (!Array.isArray(args)) {
+        // eslint-disable-next-line no-param-reassign
+        args = [args];
+      }
+      // eslint-disable-next-line prefer-const
+      let [given, expected] = args;
       if (!expected) {
         const extensionPos = given.lastIndexOf('.');
         // eslint-disable-next-line no-param-reassign
