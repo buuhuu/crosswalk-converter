@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import nock from 'nock';
 import assert from 'assert';
@@ -35,6 +35,11 @@ export function toMocha(pipe, opts = {}) {
   }
 
   return async function (fixtures) {
+    if (!fixtures) {
+      const fileNames = fs.readdirSync(fixturesFolder);
+      // eslint-disable-next-line no-param-reassign
+      fixtures = fileNames.filter((fileName) => fileName.endsWith('.html') && !fileName.endsWith('-converted.html'));
+    }
     fixtures.forEach((args) => {
       if (!Array.isArray(args)) {
         // eslint-disable-next-line no-param-reassign
@@ -48,8 +53,8 @@ export function toMocha(pipe, opts = {}) {
         expected = `${given.substring(0, extensionPos)}-converted${given.substring(extensionPos)}`;
       }
       indivdualTest(`conversts ${given} to ${expected}`, async () => {
-        const givenHtml = await fs.readFile(path.resolve(fixturesFolder, given), { encoding: 'utf-8' });
-        const expectedHtml = await fs.readFile(path.resolve(fixturesFolder, expected), { encoding: 'utf-8' });
+        const givenHtml = await fs.promises.readFile(path.resolve(fixturesFolder, given), { encoding: 'utf-8' });
+        const expectedHtml = await fs.promises.readFile(path.resolve(fixturesFolder, expected), { encoding: 'utf-8' });
         const requestPath = `/${given}`;
 
         nock(converterCfg.origin).get(mapInbound(requestPath, mappingCfg)).reply(200, givenHtml);

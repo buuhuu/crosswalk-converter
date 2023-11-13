@@ -102,6 +102,7 @@ async function copyFiles() {
       checksums: [
         'c2fcf3c7f759e27ed3e9c39659484e0a',
         '19172e89f964caba268061814d754eca',
+        '6bcf3defcb9451e72d11165c000e0fcf',
       ],
     },
     {

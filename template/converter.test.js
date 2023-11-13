@@ -26,7 +26,5 @@ describe('Converter', async () => {
     fixturesFolder,
   });
 
-  await testRunner([
-    ['empty.html', 'empty-converted.html'],
-  ]);
+  await testRunner();
 });
