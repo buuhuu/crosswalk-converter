@@ -134,6 +134,11 @@ async function copyFiles() {
       to: `${projectRoot}/.github/workflows/undeploy-converter.yaml`,
       checksums: ['914d0956e0d54482be536e6f0249b993'],
     },
+    {
+      from: 'template/gitignore',
+      to: `${converterPath}/.gitignore`,
+      checksums: ['41350645ab79a0fd89ee04f4eb529020'],
+    },
   ];
 
   await Promise.all(files.map(({ from, to, checksums }) => copyFile(from, to, checksums)));
