@@ -13,13 +13,15 @@
 /* eslint-disable import/prefer-default-export */
 
 import { pipe } from './utill/pipe.js';
-import md2html from './steps/md2html.js';
-import fetchContent from './steps/fetch-content.js';
-import html2md from './steps/html2md.js';
-import parseMd from './steps/parse-md.js';
-import transformMdast from './steps/transform-mdast.js';
-import stringifyMdast from './steps/stringify-mdast.js';
-import blobEncode from './steps/blob-encode.js';
+import {
+  md2html,
+  fetchContent,
+  html2md,
+  parseMd,
+  transformMdast,
+  stringifyMdast,
+  blobEncode,
+} from './steps/index.js';
 
 export function pipeline() {
   return pipe()

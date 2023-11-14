@@ -10,17 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { pipeline } from './pipeline.js';
-import { toExpress } from './wrapper/express.js';
-import { toRuntime } from './wrapper/runtime.js';
-import { toMocha } from './wrapper/mocha.js';
-
-// reexport specifics to extend the pipeline
-export { transformMdast, DEFAULT_TRANSFORMERS } from './steps/index.js';
+import md2html from './md2html.js';
+import fetchContent from './fetch-content.js';
+import html2md from './html2md.js';
+import parseMd from './parse-md.js';
+import transformMdast, { DEFAULT_TRANSFORMERS } from './transform-mdast.js';
+import stringifyMdast from './stringify-mdast.js';
+import blobEncode from './blob-encode.js';
 
 export {
-  pipeline,
-  toExpress,
-  toRuntime,
-  toMocha,
+  md2html,
+  fetchContent,
+  html2md,
+  parseMd,
+  transformMdast,
+  DEFAULT_TRANSFORMERS,
+  stringifyMdast,
+  blobEncode,
 };
