@@ -152,15 +152,19 @@ async function updatePackageJson() {
   const packageJsonPath = path.resolve(projectRoot, 'package.json');
   const packageJsonStr = await fs.promises.readFile(packageJsonPath, fileOpts);
   const packageJson = JSON.parse(packageJsonStr);
+  const distDir = `${converterPath}/dist`;
+  const srcDir = `${converterPath}/src`;
+  const webpackConfig = `${converterPath}/webpack.config.js`;
+  const testDir = `${converterPath}/test`;
 
   const scripts = {
-    'converter:build': `cd ${converterPath} && rimraf dist/ && webpack`,
-    'converter:build:prod': `cd ${converterPath} && rimraf dist/ && webpack --mode=production`,
-    'converter:test': `cd ${converterPath} && instant-mocha --spec test/**/*.test.js --require test/setup-env.esm.mjs --timeout 10000`,
+    'converter:build': `rimraf ${distDir} && webpack --config ${webpackConfig}`,
+    'converter:build:prod': `rimraf ${distDir} && webpack --config ${webpackConfig} --mode=production`,
+    'converter:test': `instant-mocha --webpack-config ${webpackConfig} --spec ${testDir}/**/*.test.js --require ${testDir}/setup-env.esm.mjs --timeout 10000`,
     'converter:serve': 'npm-run-all converter:build --parallel converter:serve:*',
-    'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
-    'converter:serve:server': `nodemon -r dotenv/config --inspect ${converterPath}/dist/index.js --watch ${converterPath}/dist`,
-    'converter:deploy': `node node_modules/crosswalk-converter/bin/deploy.mjs ${converterPath}/dist/index.js.zip`,
+    'converter:serve:build': `webpack --config ${webpackConfig} ${srcDir}/dev-server.js --watch`,
+    'converter:serve:server': `nodemon -r dotenv/config --inspect ${distDir}/index.js --watch ${distDir}`,
+    'converter:deploy': `node node_modules/crosswalk-converter/bin/deploy.mjs ${distDir}/index.js.zip`,
     'converter:undeploy': 'node node_modules/crosswalk-converter/bin/undeploy.mjs',
   };
 
