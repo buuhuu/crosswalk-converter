@@ -13,15 +13,20 @@
 /* eslint-disable no-param-reassign */
 
 import * as WebImporter from '@adobe/helix-importer';
+import { JSDOM } from 'jsdom';
+
+function domParser(html, url) {
+  return new JSDOM(html, { url }).window.document;
+}
 
 export default async function html2md(state, _params, opts) {
-  const { origin, transform, domParser } = opts;
+  const { origin, transform } = opts;
   const { blob, contentType, originUrl } = state;
 
   if (contentType === 'text/html') {
     // using a different dom parser requires helix-importer to not serialize and reparse the
     // document see https://github.com/adobe/helix-importer/issues/258
-    const document = domParser?.(blob) || blob;
+    const document = domParser(blob, originUrl);
     const md = await WebImporter.html2md(
       originUrl,
       document,
