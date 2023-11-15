@@ -23,7 +23,7 @@
   "dependencies": {
     "@actions/github": "^6.0.0",
     "@adobe/helix-html-pipeline": "^4.1.10",
-    "@adobe/helix-importer": "^2.9.40",
+    "@adobe/helix-importer": "^3.0.0",
     "@adobe/mdast-util-gridtables": "^2.0.2",
     "@adobe/remark-gridtables": "^1.0.4",
     "dotenv": "^16.3.1",
@@ -37,7 +37,6 @@
     "html-entities": "^2.4.0",
     "instant-mocha": "^1.5.2",
     "jsdom": "^22.1.0",
-    "linkedom": "^0.16.1",
     "mdast-util-to-hast": "^12.3.0",
     "nock": "^13.3.7",
     "node-fetch": "3.3.1",
