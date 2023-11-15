@@ -79,6 +79,7 @@ async function copyFiles() {
         '36c91744646fcb80b83fb6e6c9928c1a',
         '562dbe7dfb28c580d71cb7fa38422aad',
         'd6a32f5e1f01c3a5e9e950c5c1c6e0ab',
+        '7737d82a25e1d5cd464f22cf71d9243c',
       ],
     },
     {
@@ -154,7 +155,7 @@ async function updatePackageJson() {
 
   const scripts = {
     'converter:build': `cd ${converterPath} && rimraf dist/ && webpack`,
-    'converter:build:prod': `cd ${converterPath} && rimraf dist/ && webpack -- --env=mode=production`,
+    'converter:build:prod': `cd ${converterPath} && rimraf dist/ && webpack --mode=production`,
     'converter:test': `cd ${converterPath} && instant-mocha --spec test/**/*.test.js --require test/setup-env.esm.mjs --timeout 10000`,
     'converter:serve': 'npm-run-all converter:build --parallel converter:serve:*',
     'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
