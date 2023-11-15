@@ -25,6 +25,7 @@ import fetch from 'node-fetch';
 import { toRuntime } from './runtime.js';
 import { isBinary } from '../utill/media-utils.js';
 import { toBuffer } from '../steps/blob-encode.js';
+import originalMd2Html from '../steps/md2html.js';
 
 const { AEM_USER, AEM_PASSWORD, AEM_TOKEN } = process.env;
 const LOCALHOST = 'http://127.0.0.1';
@@ -37,7 +38,11 @@ const LOCALHOST = 'http://127.0.0.1';
  * @param {URL} url
  * @returns
  */
-export async function md2html(state, _params, opts) {
+export async function md2html(state, params, opts) {
+  if (params.semanticHtml) {
+    return originalMd2Html(state, params, opts);
+  }
+
   const { md } = state;
 
   if (!md) {
@@ -194,6 +199,12 @@ export function toExpress(pipe, opts = {}) {
     // remove .plain.html to treat it as html request
     if (path.endsWith('.plain.html')) {
       path = `${path.substring(0, path.length - 11)}`;
+    }
+
+    // remove .semantic.html to treat it as html request
+    if (path.endsWith('.semantic.html')) {
+      params.semanticHtml = true;
+      path = `${path.substring(0, path.length - 14)}`;
     }
 
     // serve everything that is code from the local dev server
