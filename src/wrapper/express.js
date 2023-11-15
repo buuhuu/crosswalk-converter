@@ -175,7 +175,7 @@ export function toExpress(pipe, opts = {}) {
     // replace md2html with the one defined for express
     .use(md2html, (_, params) => !params.md)
     // apply html fixes if not rendering md
-    .use(fixHtml, (_, params) => !params.md)
+    .use(fixHtml, (_, params) => !params.md && !params.semanticHtml)
     // do not encode blobs
     .use(blobEncode);
 
