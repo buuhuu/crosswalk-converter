@@ -7,10 +7,10 @@
     "lint": "eslint .",
     "postinstall": "node bin/postinstall.mjs",
     "build": "rimraf dist/ && webpack",
-    "build:prod": "rimraf dist/ && webpack --env=mode=production",
+    "build:prod": "rimraf dist/ && webpack --mode=production",
     "test": "instant-mocha",
     "e2e:build": "rimraf dist/ && webpack ./e2e/runtime.js",
-    "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --env=mode=production",
+    "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --mode=production",
     "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js"
   },
   "mocha": {
