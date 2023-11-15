@@ -94,6 +94,7 @@ const DEFAULT_CONFIG = {
 
 module.exports = (env, { mode = 'development' }) => {
   let plugins = [...DEFAULT_CONFIG.plugins];
+  let output = { ...DEFAULT_CONFIG.output };
   let devtool = 'source-map';
 
   if (mode === 'production') {
@@ -109,11 +110,16 @@ module.exports = (env, { mode = 'development' }) => {
     // eslint-disable-next-line no-lonely-if
     if (typeof inspector?.url() !== 'undefined') {
       devtool = 'eval-source-map';
+      output = {
+        ...output,
+        devtoolModuleFilenameTemplate: 'webpack:///[absolute-resource-path]',
+      };
     }
   }
 
   return {
     ...DEFAULT_CONFIG,
+    output,
     plugins,
     mode,
     devtool,
