@@ -30,6 +30,7 @@ import originalMd2Html from '../steps/md2html.js';
 
 const { AEM_USER, AEM_PASSWORD, AEM_TOKEN } = process.env;
 const LOCALHOST = 'http://127.0.0.1';
+const CACHE = {};
 
 /**
  * Alternative implementation of m2html that uses the helix-html-pipeline to render the document.
@@ -245,19 +246,31 @@ export function toExpress(pipe, opts = {}) {
           res.send(ex.stack);
         });
     } else {
+      const { originalUrl } = req;
+      const sendRes = ({ statusCode, body, headers }) => {
+        res.set({ ...headers, 'cache-control': 'privat, max-age=300' });
+        res.status(statusCode);
+        res.send(body);
+      };
+
+      // check if the file was already served
+      if (CACHE[originalUrl]) {
+        sendRes(CACHE[originalUrl]);
+        return;
+      }
+
       // otherwise run the pipeline
-      const reqUrl = new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+      const reqUrl = new URL(`${req.protocol}://${req.get('host')}${originalUrl}`);
       const queryString = reqUrl.search.substring(1);
-      const fn = toRuntime(pipe, { ...opts, originalUrl: req.originalUrl });
+      const fn = toRuntime(pipe, { ...opts, originalUrl });
       fn({
         __ow_path: path,
         __ow_headers: { ...requestHeaders },
         __ow_query: queryString,
         ...params,
-      }).then(({ statusCode, body, headers }) => {
-        res.set({ ...headers, 'cache-control': 'privat, max-age=300' });
-        res.status(statusCode);
-        res.send(body);
+      }).then((state) => {
+        CACHE[originalUrl] = state;
+        sendRes(state);
       });
     }
   };
