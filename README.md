@@ -18,7 +18,7 @@ npm install --save github:buuhuu/crosswalk-converter
 
 During the installation a few files will be copied into your project, some of them may be changed and others not. It is recommended to keep the files unchanged so that they can be automatically updated when updating the crosswalk-converter package. 
 
-After the installation it is required to configure the origin from which the content to be converted should be fetched. This can be done by changing the `converter.yaml` file installed in the root of the project.
+After the installation it is required to configure the origin from which the content should be fetched. This can be done by changing the `converter.yaml` file installed in the root of the project.
 
 ### converter.yaml
 
@@ -107,7 +107,7 @@ To add a regression tests, add a new html file `my-component.html` and one with 
 
 The converter users [instant-mocha](https://github.com/privatenumber/instant-mocha/) to run build and and run the tests. 
 
-## Degugging
+### Degugging
 
 When devloping conversion rules with the [@adobe/helix-importer-ui](https://github.com/adobe/helix-importer-ui) it is straight forward to debug them in the browser. 
 
@@ -121,6 +121,15 @@ node --inspect node_modules/.bin/instant-mocha
 
 This allows your to break on any source file in your project, but not to step into the code of any dependencies.
 
+### Authorization
+
+For use case where the origin requires authorization it is possible to specify the credentials for the local converter in various ways:
+
+1.  Add a `Authorization` header to the request using a browser extension. The header will be passed through to the origin.
+2. Set `AEM_USER` and `AEM_PASSWORD` environment variables to add a basic `Authorization` header to the origin request.
+3. Set a `AEM_TOKEN` environment variable to add a bearer `Authorization` header to the origin request.
+
+For (2) and (3) it is possible to create a `.env` file in the project root with the environment variables which will be read with using [dotenv/config](https://github.com/motdotla/dotenv) when starting the converter.
 
 ## Implementation Details 
 
