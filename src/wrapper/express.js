@@ -117,7 +117,7 @@ export async function md2html(state, params, opts) {
  * The helix-html-pipeline has a few issues. we address them here to achieve a almost 100%
  * compareable output
  */
-async function fixHtml(state) {
+async function fixHtml(state, params) {
   const { html } = state;
 
   if (!html) {
@@ -142,16 +142,18 @@ async function fixHtml(state) {
   });
 
   // 2. inject live reload
-  visit(hast, { tagName: 'head' }, (node) => {
-    node.children.push(h(
-      'script',
-      'window.LiveReloadOptions={port:3000,host:location.hostname,https:false};',
-    ));
-    node.children.push(h(
-      'script',
-      { src: '/__internal__/livereload.js' },
-    ));
-  });
+  if (!params.plainHtml) {
+    visit(hast, { tagName: 'head' }, (node) => {
+      node.children.push(h(
+        'script',
+        'window.LiveReloadOptions={port:3000,host:location.hostname,https:false};',
+      ));
+      node.children.push(h(
+        'script',
+        { src: '/__internal__/livereload.js' },
+      ));
+    });
+  }
 
   return { ...state, html: toHtml(hast) };
 }
@@ -202,6 +204,7 @@ export function toExpress(pipe, opts = {}) {
 
     // remove .plain.html to treat it as html request
     if (path.endsWith('.plain.html')) {
+      params.plainHtml = true;
       path = `${path.substring(0, path.length - 11)}`;
     }
 
