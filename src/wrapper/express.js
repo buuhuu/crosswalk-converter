@@ -20,6 +20,7 @@ import { PipelineResponse } from '@adobe/helix-html-pipeline/src/PipelineRespons
 import { fromHtml } from 'hast-util-from-html';
 import { toHtml } from 'hast-util-to-html';
 import { visit, SKIP } from 'unist-util-visit';
+import { selectAll } from 'hast-util-select';
 import { h } from 'hastscript';
 import fetch from 'node-fetch';
 import { toRuntime } from './runtime.js';
@@ -125,6 +126,7 @@ async function fixHtml(state, params) {
   }
 
   const hast = fromHtml(html);
+  let content;
 
   // 1. images that are not (yet) in media bus are not wrapped in <picture> elements
   visit(hast, { tagName: 'img' }, (node, index, parent) => {
@@ -153,9 +155,12 @@ async function fixHtml(state, params) {
         { src: '/__internal__/livereload.js' },
       ));
     });
+    content = hast;
+  } else {
+    content = selectAll('body > *', hast);
   }
 
-  return { ...state, html: toHtml(hast) };
+  return { ...state, html: toHtml(content) };
 }
 
 /**
