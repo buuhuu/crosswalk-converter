@@ -269,7 +269,9 @@ export function toExpress(pipe, opts = {}) {
         __ow_query: queryString,
         ...params,
       }).then((state) => {
-        CACHE[originalUrl] = state;
+        if (state.statusCode === 200) {
+          CACHE[originalUrl] = state;
+        }
         sendRes(state);
       });
     }
