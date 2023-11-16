@@ -183,12 +183,16 @@ export function toExpress(pipe, opts = {}) {
     // eslint-disable-next-line prefer-const
     let { path } = req;
     const params = {};
-    const requestHeaders = {};
+    const requestHeaders = {
+      authorization: req.get('authorization'),
+    };
 
-    if (AEM_TOKEN) {
-      requestHeaders.authorization = `Bearer ${AEM_TOKEN}`;
-    } else if (AEM_USER && AEM_PASSWORD) {
-      requestHeaders.authorization = `Basic ${Buffer.from(`${AEM_USER}:${AEM_PASSWORD}`).toString('base64')}`;
+    if (!requestHeaders.authorization) {
+      if (AEM_TOKEN) {
+        requestHeaders.authorization = `Bearer ${AEM_TOKEN}`;
+      } else if (AEM_USER && AEM_PASSWORD) {
+        requestHeaders.authorization = `Basic ${Buffer.from(`${AEM_USER}:${AEM_PASSWORD}`).toString('base64')}`;
+      }
     }
 
     if (path.endsWith('.md')) {
