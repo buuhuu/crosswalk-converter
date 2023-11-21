@@ -156,7 +156,7 @@ async function updatePackageJson() {
   const scripts = {
     'converter:build': `cd ${converterPath} && rimraf dist/ && webpack`,
     'converter:build:prod': `cd ${converterPath} && rimraf dist/ && webpack --mode=production`,
-    'converter:test': `cd ${converterPath} && instant-mocha --spec test/**/*.test.js --require test/setup-env.esm.mjs --timeout 10000`,
+    'converter:test': `cd ${converterPath} && instant-mocha --spec test/**/*.test.js --require test/setup-env.esm.mjs --timeout 10000 --reporter-option maxDiffSize=0`,
     'converter:serve': 'npm-run-all converter:build --parallel converter:serve:*',
     'converter:serve:build': `cd ${converterPath} && webpack ./src/dev-server.js --watch`,
     'converter:serve:server': `nodemon -r dotenv/config --inspect ${converterPath}/dist/index.js --watch ${converterPath}/dist`,

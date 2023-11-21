@@ -246,7 +246,9 @@ export function toExpress(pipe, opts = {}) {
           res.send(ex.stack);
         });
     } else {
-      const { originalUrl } = req;
+      const { originalUrl, protocol } = req;
+      const reqUrl = new URL(`${protocol}://${req.get('host')}${originalUrl}`);
+      const queryString = reqUrl.search.substring(1);
       const sendRes = ({ statusCode, body, headers }) => {
         res.set({ ...headers, 'cache-control': 'privat, max-age=300' });
         res.status(statusCode);
@@ -254,14 +256,12 @@ export function toExpress(pipe, opts = {}) {
       };
 
       // check if the file was already served
-      if (CACHE[originalUrl]) {
+      if (CACHE[originalUrl] && !queryString) {
         sendRes(CACHE[originalUrl]);
         return;
       }
 
       // otherwise run the pipeline
-      const reqUrl = new URL(`${req.protocol}://${req.get('host')}${originalUrl}`);
-      const queryString = reqUrl.search.substring(1);
       const fn = toRuntime(pipe, { ...opts, originalUrl });
       fn({
         __ow_path: path,
