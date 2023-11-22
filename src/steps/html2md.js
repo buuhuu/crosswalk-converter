@@ -19,7 +19,7 @@ function domParser(html, url) {
   return new JSDOM(html, { url }).window.document;
 }
 
-export default async function html2md(state, _params, opts) {
+export default async function html2md(state, params, opts) {
   const { origin, transform } = opts;
   const { blob, contentType, originUrl } = state;
 
@@ -31,7 +31,7 @@ export default async function html2md(state, _params, opts) {
       originUrl,
       document,
       transform,
-      {},
+      { ...params },
       { cache: false, host: origin },
     );
     state = { ...state, md: md?.md, contentType: 'text/plain' };
