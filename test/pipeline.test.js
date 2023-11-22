@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+/* global __testdir */
+
 import fs from 'fs';
 import path from 'path';
 import nock from 'nock';
@@ -24,7 +26,6 @@ describe('Pipeline', () => {
   pipe.logger = { log: () => { } };
 
   it('serves small binaries base64 encoded', async () => {
-    // eslint-disable-next-line no-undef
     const binary = await fs.promises.readFile(path.resolve(__testdir, 'fixtures/test.png'));
     nock(origin).get('/test.png').reply(200, binary, { 'content-type': 'image/png', 'content-length': binary.length });
 

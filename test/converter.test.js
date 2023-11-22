@@ -15,10 +15,19 @@ import { pipeline } from '../src/pipeline.js';
 import { toMocha } from '../src/wrapper/mocha.js';
 import transform from './import.js';
 
+const origin = 'http://www.test.run';
+const converterCfg = { origin };
+const mappingCfg = { mappings: ['/content/site/:/'] };
+
 describe('Converter', async () => {
   // eslint-disable-next-line no-undef
   const fixturesFolder = path.resolve(__testdir, 'fixtures');
-  const testRunner = pipeline().wrap(toMocha, { transform, fixturesFolder });
+  const testRunner = pipeline().wrap(toMocha, {
+    converterCfg,
+    mappingCfg,
+    transform,
+    fixturesFolder,
+  });
 
   await testRunner();
 });

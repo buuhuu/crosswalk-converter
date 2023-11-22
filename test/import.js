@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 /* global WebImporter */
 /* eslint-disable class-methods-use-this */
 
@@ -31,6 +32,23 @@ function transformBlock1(main, document) {
   }
 }
 
+function createMetadata(main, document) {
+  const meta = {};
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) {
+    const href = canonical.getAttribute('href');
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = href;
+    meta.canonical = a;
+  }
+
+  if (Object.keys(meta).length) {
+    const block = WebImporter.Blocks.getMetadataBlock(document, meta);
+    main.append(block);
+  }
+}
+
 export default {
   transformDOM: async ({
     // eslint-disable-next-line no-unused-vars
@@ -39,6 +57,7 @@ export default {
     const main = document.body;
 
     transformBlock1(main, document);
+    createMetadata(main, document);
 
     return main;
   },
