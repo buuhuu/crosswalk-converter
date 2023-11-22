@@ -48,7 +48,7 @@ export function pipe() {
     const { name } = processor;
     const fn = (s, p, o) => {
       if (condition(s, p, o)) {
-        const { path } = s;
+        const { path = '???' } = s || {};
         const label = `${name}: ${path}`;
         const start = Date.now();
         try {
