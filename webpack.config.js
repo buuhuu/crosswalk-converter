@@ -76,16 +76,8 @@ const DEFAULT_CONFIG = {
       new TerserPlugin({
         parallel: true,
         terserOptions: {
-          mangle: {
-            reserved: [
-              'fetchContent',
-              'html2md',
-              'parseMd',
-              'transformMdast',
-              'stringifyMdast',
-              'md2html',
-            ],
-          },
+          keep_classnames: true,
+          keep_fnames: true,
         },
       }),
     ],
