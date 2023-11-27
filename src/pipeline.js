@@ -12,7 +12,7 @@
 
 /* eslint-disable import/prefer-default-export */
 
-import { pipe } from './utill/pipe.js';
+import { pipe } from './util/pipe.js';
 import {
   md2html,
   fetchContent,

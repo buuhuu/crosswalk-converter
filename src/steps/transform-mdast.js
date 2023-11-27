@@ -11,8 +11,8 @@
  */
 
 import { unified } from 'unified';
-import { rewriteLinks } from '../utill/mdast-rewrite-links.js';
-import { rewriteImages } from '../utill/mdast-rewrite-images.js';
+import { rewriteLinks } from '../util/mdast-rewrite-links.js';
+import { rewriteImages } from '../util/mdast-rewrite-images.js';
 
 export const DEFAULT_TRANSFORMERS = [rewriteLinks, rewriteImages];
 

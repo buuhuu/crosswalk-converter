@@ -14,7 +14,7 @@ import fs from 'fs';
 import path from 'path';
 import nock from 'nock';
 import assert from 'assert';
-import { mapInbound } from '../utill/mapping.js';
+import { mapInbound } from '../util/mapping.js';
 
 export const DEFAULT_ORIGIN = 'http://www.test.run';
 export const DEFAULT_MAPPING_CFG = { mappings: ['/:/'] };

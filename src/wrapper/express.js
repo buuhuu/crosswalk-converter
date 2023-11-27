@@ -24,7 +24,7 @@ import { selectAll } from 'hast-util-select';
 import { h } from 'hastscript';
 import fetch from 'node-fetch';
 import { toRuntime } from './runtime.js';
-import { isBinary } from '../utill/media-utils.js';
+import { isBinary } from '../util/media-utils.js';
 import { toBuffer } from '../steps/blob-encode.js';
 import originalMd2Html from '../steps/md2html.js';
 
