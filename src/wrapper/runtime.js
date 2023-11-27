@@ -27,7 +27,12 @@ export function toRuntime(pipe, opts = {}) {
     } = process.env;
     const queryString = params.__ow_query;
     const authorization = params.__ow_headers ? params.__ow_headers.authorization : '';
-    let path = params.__ow_path;
+
+    // overwrite origin if set via params
+    const origin = params.origin || converterCfg.origin;
+    converterCfg.origin = origin;
+
+    let path = params.__ow_path || '/';
 
     if (path.endsWith('.md')) {
       params.md = true;
@@ -48,7 +53,7 @@ export function toRuntime(pipe, opts = {}) {
       // '/<actionNamespace>/<actionName>'
       // where actionNamespace is <namespace>(/<packageName>)?
       const [, actionNamespace, actionName] = actionPath.match(/\/(.+)\/([^/]+)$/);
-      const branchMatch = path.match(/^\/branch\/([^/]+)(\/.+)$/);
+      const branchMatch = path.match(/^\/branch\/([^/]+)(\/.*)$/);
       const openwhisk = ow({ api_key: owApiKey, apihost: owApiHost, namespace: owNamespace });
       // filter for actions only in the same action namespace (namespace & package) and exclude self
       const actions = (await openwhisk.actions.list())
@@ -59,6 +64,9 @@ export function toRuntime(pipe, opts = {}) {
         const branchAction = actions.find(({ name }) => name === branchName);
         if (branchAction) {
           if (branchName !== actionName) {
+            // remove origin which is final
+            delete params.origin;
+
             // forward the request to the branch action only if the branchName is different than
             // the current actionName
             return openwhisk.actions.invoke({
@@ -98,7 +106,6 @@ export function toRuntime(pipe, opts = {}) {
       );
       const statusCode = error?.code || 200;
       const body = error?.message || html || md || blob;
-      const { origin } = converterCfg;
       return {
         statusCode,
         body,

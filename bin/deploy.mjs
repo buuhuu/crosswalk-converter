@@ -28,8 +28,8 @@ if (!WSK_AUTH || !WSK_NAMESPACE) {
 const [, , zipFilePath, givenName] = process.argv;
 const [packageName, actionName] = givenName?.split('/') || [];
 
-const resolvedZipFilePath = path.resolve(zipFilePath);
-const zipFileExists = fs.existsSync(resolvedZipFilePath);
+const resolvedZipFilePath = zipFilePath && path.resolve(zipFilePath);
+const zipFileExists = zipFilePath && fs.existsSync(resolvedZipFilePath);
 
 if (!packageName || !actionName || !zipFileExists) {
   if (!zipFileExists) {
