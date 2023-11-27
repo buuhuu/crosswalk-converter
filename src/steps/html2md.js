@@ -32,7 +32,12 @@ export default async function html2md(state, params, opts) {
       document,
       transform,
       {},
-      { ...params, cache: false, host: origin },
+      {
+        ...params,
+        cache: false,
+        host: origin,
+        opts,
+      },
     );
     state = { ...state, md: md?.md, contentType: 'text/plain' };
   }
