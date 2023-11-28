@@ -66,7 +66,7 @@ export function toMocha(pipe, opts = {}) {
         );
 
         assert(!error, 'no error expected');
-        assert.equal(html, expectedHtml.trim());
+        assert.equal(html.trim(), expectedHtml.replaceAll('\r\n', '\n').trim());
       });
     });
   };
