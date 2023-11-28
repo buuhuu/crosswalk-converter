@@ -11,7 +11,7 @@
  */
 
 import assert from 'assert';
-import { mapInbound, mapOutbound } from '../src/utill/mapping.js';
+import { mapInbound, mapOutbound } from '../src/util/mapping.js';
 
 describe('Mapping', () => {
   describe('map inbound', () => {

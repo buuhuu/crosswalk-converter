@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { isBinary } from '../utill/media-utils.js';
+import { isBinary } from '../util/media-utils.js';
 
 export async function toBuffer(stream) {
   return new Promise((resolve, reject) => {

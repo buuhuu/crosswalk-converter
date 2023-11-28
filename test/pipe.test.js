@@ -12,7 +12,7 @@
 
 /* eslint-disable no-unused-vars */
 
-import { pipe } from '../src/utill/pipe.js';
+import { pipe } from '../src/util/pipe.js';
 import assert from 'assert';
 
 describe('Pipe', () => {

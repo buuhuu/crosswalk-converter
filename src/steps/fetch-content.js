@@ -11,8 +11,8 @@
  */
 
 import fetch from 'node-fetch';
-import { mapInbound } from '../utill/mapping.js';
-import { isBinary } from '../utill/media-utils.js';
+import { mapInbound } from '../util/mapping.js';
+import { isBinary } from '../util/media-utils.js';
 
 export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
