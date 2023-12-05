@@ -11,7 +11,7 @@
     "test": "instant-mocha",
     "e2e:build": "rimraf dist/ && webpack ./e2e/runtime.js",
     "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --mode=production",
-    "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js"
+    "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js --watch ./dist"
   },
   "mocha": {
     "spec": "test/**/*.test.js",
@@ -33,6 +33,7 @@
     "hast-util-raw": "^8.0.0",
     "hast-util-select": "^5.0.5",
     "hast-util-to-html": "^8.0.4",
+    "hast-util-to-xast": "^3.0.0",
     "hastscript": "^7.2.0",
     "html-entities": "^2.4.0",
     "instant-mocha": "^1.5.2",
@@ -51,13 +52,16 @@
     "rimraf": "^3.0.2",
     "terser-webpack-plugin": "^5.3.9",
     "unified": "^11.0.4",
+    "unist-util-position": "^5.0.0",
     "unist-util-visit": "^5.0.0",
     "unist-util-visit-parents": "^6.0.1",
     "webpack": "^5.89.0",
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
+    "xast-util-to-xml": "^4.0.0",
     "yaml-loader": "^0.8.0",
-    "zip-webpack-plugin": "^4.0.1"
+    "zip-webpack-plugin": "^4.0.1",
+    "zwitch": "^2.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

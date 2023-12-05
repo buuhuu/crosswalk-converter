@@ -13,19 +13,39 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-relative-packages */
 
-import express from 'express';
-import { toExpress, pipeline } from '../src/index.js';
-import converterCfg from './converter.yaml';
-import mappingCfg from './paths.yaml';
+import express from "express";
+import { toExpress } from "../src/wrapper/re-import.js";
+import converterCfg from "./converter.yaml";
+import mappingCfg from "./paths.yaml";
+import transform from "./import.js";
+import { pipe } from "../src/util/pipe.js";
+import {
+  fetchContent,
+  html2md,
+  parseMd,
+  transformMdast,
+  stringifyMdast,
+  blobEncode,
+} from "../src/steps/index.js";
 
 const app = express();
 const port = 3030;
-const handler = pipeline().wrap(toExpress, {
+
+const pipeline = pipe()
+  .use(fetchContent)
+  .use(html2md)
+  .use(parseMd)
+  .use(transformMdast)
+  .use(stringifyMdast)
+  .use(blobEncode);
+
+const handler = pipeline.wrap(toExpress, {
   port,
+  transform,
   converterCfg,
   mappingCfg,
 });
 
-app.get('/**', handler);
+app.get("/**", handler);
 // eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Converter listening on port ${port}`));
