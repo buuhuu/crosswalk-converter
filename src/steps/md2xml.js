@@ -20,6 +20,7 @@ import { h } from 'hastscript';
 import fixSections from '@adobe/helix-html-pipeline/src/steps/fix-sections.js';
 import { zwitch } from 'zwitch';
 import xmlHandler from './xml/index.js';
+import skeleton from './xml/skeleton.js';
 
 function unknown(value) {
   throw new Error('Cannot transform node of type `' + value.type + '`')
@@ -33,8 +34,9 @@ function patch(origin, node) {
   if (origin.position) node.position = position(origin)
 }
 
+// Handlers for the different types
 function text(node, state) {
-  //console.log('text - ignore');
+  console.log('text - ignore');
   // TODO this must return a string
   return {};
 }
@@ -58,6 +60,7 @@ function element(node, state) {
 
   while (++index < node.children.length) {
     const child = node.children[index];
+    childState.nameSuffix = index > 0 ? `_${index - 1}` : '';
     children[index] = (toXast(child, childState));
   }
 
@@ -67,13 +70,12 @@ function element(node, state) {
     ...nodeProps,
     children,
   };
-
-  patch(node, result);
+  patch(node, result); // Patch replaces each node with its XML representation
   return result;
 }
 
 const toXast = zwitch('type', {
-  handlers: { element, text, raw },
+  handlers: { element, text, raw }, // Each handler should return its own node representation
   invalid,
   unknown,
 });
@@ -94,12 +96,17 @@ export default function md2xml(state) {
     fixSections({ content });
     createPageBlocks({ content });
 
-    const doc = h('html', [h('main', content.hast)]);
+    // Using hastscript to create virtual hast trees (for HTML)
+    const doc = h('root', [content.hast]);
 
     hastRaw(doc);
     rehypeFormat()(doc);
 
     const xml = toXast(doc);
+
+    // TODO: merge in xml from above when ready
+    const xastDoc = skeleton;
+
     // const xast = toXast(doc);
     // const xml = toXml(xast);
 

@@ -9,6 +9,7 @@
     "build": "rimraf dist/ && webpack",
     "build:prod": "rimraf dist/ && webpack --mode=production",
     "test": "instant-mocha",
+    "test:html2jcr": "instant-mocha -g 'HTML to JCR test suite'",
     "e2e:build": "rimraf dist/ && webpack ./e2e/runtime.js",
     "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --mode=production",
     "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js --watch ./dist"
@@ -52,6 +53,7 @@
     "rimraf": "^3.0.2",
     "terser-webpack-plugin": "^5.3.9",
     "unified": "^11.0.4",
+    "unist-builder": "^4.0.0",
     "unist-util-position": "^5.0.0",
     "unist-util-visit": "^5.0.0",
     "unist-util-visit-parents": "^6.0.1",
@@ -59,6 +61,7 @@
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
     "xast-util-to-xml": "^4.0.0",
+    "xastscript": "^4.0.0",
     "yaml-loader": "^0.8.0",
     "zip-webpack-plugin": "^4.0.1",
     "zwitch": "^2.0.4"
