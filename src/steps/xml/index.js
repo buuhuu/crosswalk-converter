@@ -1,4 +1,5 @@
 import { zwitch } from 'zwitch';
+import html from './html.js';
 import main from './main.js';
 import div from './div.js';
 
@@ -11,11 +12,11 @@ function invalid(value) {
 }
 
 const tag = zwitch('tagName', {
-  handlers: { main, div },
+  handlers: { html, main, div }, //img, p, h1-6,
   invalid,
   unknown,
 });
 
-export default async function xml(node, state) {
+export default function xml(node, state) {
   return tag(node, state);
 }

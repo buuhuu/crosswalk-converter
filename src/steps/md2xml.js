@@ -54,30 +54,31 @@ function element(node, state) {
   const childState = { ...state };
   childState.parent = node.tagName;
 
-  const xml = xmlHandler(node, childState);
+  const nodeProps = xmlHandler(node, childState);
 
   while (++index < node.children.length) {
     const child = node.children[index];
-    const result = (toXml(child, childState));
-    children[index] = result;
+    children[index] = (toXast(child, childState));
   }
+
   const result = {
     type: 'element',
     name: node.tagName,
-    attributes,
+    ...nodeProps,
     children,
   };
+
   patch(node, result);
   return result;
 }
 
-const toXml = zwitch('type', {
+const toXast = zwitch('type', {
   handlers: { element, text, raw },
   invalid,
   unknown,
 });
 
-export default async function md2xml(state) {
+export default function md2xml(state) {
   const { mdast } = state;
 
   if (mdast) {
@@ -93,12 +94,12 @@ export default async function md2xml(state) {
     fixSections({ content });
     createPageBlocks({ content });
 
-    const doc = h('html', [h('body', [h('main', content.hast)])]);
+    const doc = h('html', [h('main', content.hast)]);
 
     hastRaw(doc);
     rehypeFormat()(doc);
 
-    const xml = toXml(doc);
+    const xml = toXast(doc);
     // const xast = toXast(doc);
     // const xml = toXml(xast);
 

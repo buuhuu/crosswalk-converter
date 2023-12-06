@@ -47,5 +47,6 @@ const handler = pipeline.wrap(toExpress, {
 });
 
 app.get("/**", handler);
+
 // eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Converter listening on port ${port}`));
