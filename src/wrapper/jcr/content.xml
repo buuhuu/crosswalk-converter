@@ -20,7 +20,7 @@
                     jcr:lastModified="{Date}2023-10-24T15:34:34.516+02:00"
                     jcr:lastModifiedBy="admin"
                     jcr:primaryType="nt:unstructured"
-                    jcr:title="Magazine"
+                    jcr:title="Magazine v1"
                     sling:resourceType="core/franklin/components/title/v1/title"
                     type="h1"/>
                 <block
