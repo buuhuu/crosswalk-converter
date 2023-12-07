@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "A serverless wrapper of @adobe/helix-importer to facilitate projects to migrate from AEM to AEM with Edge Delivery Services.",
   "main": "src/index.js",
-  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "postinstall": "node bin/postinstall.mjs",
@@ -13,7 +12,7 @@
     "e2e:build": "rimraf dist/ && webpack ./e2e/runtime.js",
     "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --mode=production",
     "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js",
-    "jcr": "node src/wrapper/jcr/jcr-package.js"
+    "package": "rimraf dist/ && webpack ./src/create-package.js && node --inspect ./dist/index.js"
   },
   "mocha": {
     "spec": "test/**/*.test.js",
