@@ -55,6 +55,7 @@
     "unified": "^11.0.4",
     "unist-builder": "^4.0.0",
     "unist-util-position": "^5.0.0",
+    "unist-util-select": "^5.1.0",
     "unist-util-visit": "^5.0.0",
     "unist-util-visit-parents": "^6.0.1",
     "webpack": "^5.89.0",

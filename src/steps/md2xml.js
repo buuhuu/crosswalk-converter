@@ -19,26 +19,28 @@ import createPageBlocks from '@adobe/helix-html-pipeline/src/steps/create-page-b
 import { h } from 'hastscript';
 import fixSections from '@adobe/helix-html-pipeline/src/steps/fix-sections.js';
 import { zwitch } from 'zwitch';
+import { select } from 'unist-util-select';
+import { toXml } from 'xast-util-to-xml';
 import xmlHandler from './xml/index.js';
 import skeleton from './xml/skeleton.js';
 
 function unknown(value) {
-  throw new Error('Cannot transform node of type `' + value.type + '`')
+  throw new Error(`Cannot transform node of type \`${value.type}\``);
 }
 
 function invalid(value) {
-  throw new Error('Expected node, not `' + value + '`')
+  throw new Error(`Expected node, not \`${value}\``);
 }
 
 function patch(origin, node) {
-  if (origin.position) node.position = position(origin)
+  if (origin.position) node.position = position(origin);
 }
 
 // Handlers for the different types
 function text(node, state) {
   console.log('text - ignore');
   // TODO this must return a string
-  return {};
+  return node;
 }
 
 function raw(node, state) {
@@ -51,7 +53,6 @@ function element(node, state) {
 
   const children = [];
   let index = -1;
-  const attributes = {};
 
   const childState = { ...state };
   childState.parent = node.tagName;
@@ -80,6 +81,15 @@ const toXast = zwitch('type', {
   unknown,
 });
 
+function mergeWithSkeleton(xast) {
+  const mergedDoc = { ...skeleton };
+  const rootNode = select('element [name=root]', mergedDoc);
+  if (rootNode) {
+    rootNode.children = xast.children;
+  }
+  return mergedDoc;
+}
+
 export default function md2xml(state) {
   const { mdast } = state;
 
@@ -97,15 +107,16 @@ export default function md2xml(state) {
     createPageBlocks({ content });
 
     // Using hastscript to create virtual hast trees (for HTML)
-    const doc = h('root', [content.hast]);
+    const doc = h('html', [h('body', [h('main', content.hast)])]);
 
     hastRaw(doc);
     rehypeFormat()(doc);
 
-    const xml = toXast(doc);
+    // Convert hast tree to a JCR compatible xast tree
+    let jcrTree = toXast(select('element [tagName=main]', doc));
 
-    // TODO: merge in xml from above when ready
-    const xastDoc = skeleton;
+    // Merge JCR tree with skeleton tree
+    jcrTree = mergeWithSkeleton(jcrTree);
 
     // const xast = toXast(doc);
     // const xml = toXml(xast);
@@ -116,11 +127,15 @@ export default function md2xml(state) {
     //   contentType: 'application/xml',
     // };
 
-    return {
+    const xmlState = {
       ...state,
-      html: JSON.stringify(xml, null, 2),
-      contentType: 'text/plain',
+      html: toXml(jcrTree),
+      contentType: 'application/xml',
     };
+
+    console.log(xmlState.html);
+
+    return xmlState;
   }
 
   return state;

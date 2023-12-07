@@ -3,31 +3,37 @@ import { x } from 'xastscript';
 
 // Construct the base JCR page structure using xastscript
 const skeleton = x(null, [
-    u('instruction', {name: 'xml'}, 'version="1.0" encoding="UTF-8"'),
-    x("jcr:root",
+  u('instruction', { name: 'xml' }, 'version="1.0" encoding="UTF-8"'),
+  x(
+    'jcr:root',
     {
-        "xmlns:jcr": "http://www.jcp.org/jcr/1.0",
-        "xmlns:nt": "http://www.jcp.org/jcr/nt/1.0",
-        "xmlns:cq": "http://www.day.com/jcr/cq/1.0",
-        "xmlns:sling": "http://sling.apache.org/jcr/sling/1.0",
-        "jcr:primaryType": "cq:Page"
+      'xmlns:jcr': 'http://www.jcp.org/jcr/1.0',
+      'xmlns:nt': 'http://www.jcp.org/jcr/nt/1.0',
+      'xmlns:cq': 'http://www.day.com/jcr/cq/1.0',
+      'xmlns:sling': 'http://sling.apache.org/jcr/sling/1.0',
+      'jcr:primaryType': 'cq:Page',
     },
     [
-        x("jcr:content",
+      x(
+        'jcr:content',
         {
-            "cq:template": "/libs/core/franklin/templates/page",
-            "jcr:primaryType": "cq:PageContent",
-            "jcr:title": "Sites Franklin Example",
-            "sling:resourceType": "core/franklin/components/page/v1/page"
+          'cq:template': '/libs/core/franklin/templates/page',
+          'jcr:primaryType': 'cq:PageContent',
+          'jcr:title': 'Sites Franklin Example',
+          'sling:resourceType': 'core/franklin/components/page/v1/page',
         },
         [
-            x("root",
+          x(
+            'root',
             {
-                "jcr:primaryType": "nt:unstructured",
-                "sling:resourceType": "core/franklin/components/root/v1/root"
-            })
-        ])
-    ])
+              'jcr:primaryType': 'nt:unstructured',
+              'sling:resourceType': 'core/franklin/components/root/v1/root',
+            },
+          ),
+        ],
+      ),
+    ],
+  ),
 ]);
 
 export default skeleton;
