@@ -130,7 +130,10 @@ async function copyFiles() {
     {
       from: 'template/deploy-converter.yaml',
       to: `${projectRoot}/.github/workflows/deploy-converter.yaml`,
-      checksums: ['154249ad3371e7acbf661e3f68985650'],
+      checksums: [
+        '154249ad3371e7acbf661e3f68985650',
+        '95129b0b4c33db6146ddaa8a4d505fe2',
+      ],
     },
     {
       from: 'template/undeploy-converter.yaml',
