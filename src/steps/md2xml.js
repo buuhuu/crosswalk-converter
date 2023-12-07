@@ -23,6 +23,7 @@ import { select } from 'unist-util-select';
 import { toXml } from 'xast-util-to-xml';
 import xmlHandler from './xml/index.js';
 import skeleton from './xml/skeleton.js';
+import { u } from 'unist-builder';
 
 function unknown(value) {
   throw new Error(`Cannot transform node of type \`${value.type}\``);
@@ -54,14 +55,18 @@ function element(node, state) {
   const children = [];
   let index = -1;
 
-  const childState = { ...state };
-  childState.parent = node.tagName;
+  const childState = {
+    elementCount: {},
+    ...state
+  };
 
   const nodeProps = xmlHandler(node, childState);
 
+  childState.parent = node.tagName;
+
   while (++index < node.children.length) {
     const child = node.children[index];
-    childState.nameSuffix = index > 0 ? `_${index - 1}` : '';
+
     children[index] = (toXast(child, childState));
   }
 
@@ -81,11 +86,12 @@ const toXast = zwitch('type', {
   unknown,
 });
 
-function mergeWithSkeleton(xast) {
+function mergeWithSkeleton(rootNodeXast) {
   const mergedDoc = { ...skeleton };
-  const rootNode = select('element [name=root]', mergedDoc);
-  if (rootNode) {
-    rootNode.children = xast.children;
+  const pageNode = select('element [name="jcr:content"]', mergedDoc);
+  if (pageNode) {
+    pageNode.children = [rootNodeXast,
+      u('text', '\n')];
   }
   return mergedDoc;
 }
@@ -93,6 +99,7 @@ function mergeWithSkeleton(xast) {
 export default function md2xml(state) {
   const { mdast } = state;
 
+  // TODO: at this point, all the section divs in our HTML content have been stripped out
   if (mdast) {
     const main = mdast2hast(mdast, {
       handlers: {
@@ -129,7 +136,7 @@ export default function md2xml(state) {
 
     const xmlState = {
       ...state,
-      html: toXml(jcrTree),
+      html: toXml(jcrTree, { closeEmptyElements: true }),
       contentType: 'application/xml',
     };
 

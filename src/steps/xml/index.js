@@ -2,6 +2,7 @@ import { zwitch } from 'zwitch';
 import root from './root.js';
 import main from './main.js';
 import div from './div.js';
+import heading from './heading';
 
 // Unknown tag elements end up here
 function unknown(value) {
@@ -13,7 +14,17 @@ function invalid(value) {
 }
 
 const tag = zwitch('tagName', {
-  handlers: { root, main, div }, // Need to add other handlers for title, p, img, h1-6
+  handlers: {
+    root,
+    main,
+    div,
+    h1: heading,
+    h2: heading,
+    h3: heading,
+    h4: heading,
+    h5: heading,
+    h6: heading
+  }, // Need to add other handlers for title, p, img
   invalid,
   unknown,
 });

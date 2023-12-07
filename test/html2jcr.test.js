@@ -19,6 +19,8 @@ import {
   stringifyMdast,
 } from '../src/steps/index.js';
 import md2xml from '../src/steps/md2xml.js';
+import skeleton from '../src/steps/xml/skeleton';
+import { toXml } from 'xast-util-to-xml';
 
 function loadContent(state) {
   // This needs to use the OUTPUT of import.js
@@ -57,6 +59,30 @@ function loadContent(state) {
           </td>
         </tr>
       </table>
+    </div>
+  </body>
+</html>`;
+
+  return {
+    ...state,
+    blob: testHtml,
+    contentType: 'text/html',
+    originUrl: 'http://localhost',
+  };
+}
+function loadBasicContent(state) {
+  // This needs to use the OUTPUT of import.js
+  const testHtml = `<html>
+  <head>
+    <title>Site title</title>
+  </head>
+  <body>
+    <div>
+
+      <h2>Heading 2</h2>
+      <h3>Heading 3</h3>
+      <p><a href="https://aem.live">CTA</a></p>
+      <p>This is <u>some</u> <em>formatted</em> <strong>rich text</strong>. With <sup>many</sup> <sub>formats</sub>.</p>
 
     </div>
   </body>
@@ -73,20 +99,21 @@ function loadContent(state) {
 describe('HTML to JCR test suite', () => {
   it('converts a basic HTML file to its JCR representation', async () => {
     const pipeline = pipe()
-      .use(loadContent)
-      .use(html2md) // Symantic, correct Mardown after this point
+      .use(loadBasicContent)
+      .use(html2md) // Symantic, correct Markdown after this point
       .use(parseMd)
       .use(transformMdast)
       .use(stringifyMdast)
       .use(md2xml);
 
-    const { xml } = await pipeline.run(
+    const { html } = await pipeline.run(
       { },
       { },
       { },
     );
 
     // Check the XML output
-    assert.equal(xml, false);
+    assert.equal(html, false);
   });
+
 });
