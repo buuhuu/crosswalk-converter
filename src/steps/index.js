@@ -19,9 +19,11 @@ import stringifyMdast from './stringify-mdast.js';
 import blobEncode from './blob-encode.js';
 import html2xml from './html2xml.js';
 import xml2package from './xml2package.js';
+import md2xml from './md2xml.js';
 
 export {
   md2html,
+  md2xml,
   fetchContent,
   html2md,
   parseMd,

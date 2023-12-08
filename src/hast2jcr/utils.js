@@ -71,13 +71,15 @@ export function getHandler(node, parents, ctx) {
     }
   }
   if (node.tagName === 'p') {
-    if (matchStructure(node, h('p', [h('strong', [h('a')])]))
+    if (node.children.length === 1) {
+      if (matchStructure(node, h('p', [h('strong', [h('a')])]))
         || matchStructure(node, h('p', [h('a')]))
         || matchStructure(node, h('p', [h('em', [h('a')])]))) {
-      return handlers.button;
-    }
-    if (matchStructure(node, h('p', [h('picture', [h('img')])]))) {
-      return handlers.image;
+        return handlers.button;
+      }
+      if (matchStructure(node, h('p', [h('picture', [h('img')])]))) {
+        return handlers.image;
+      }
     }
 
     return handlers.text;

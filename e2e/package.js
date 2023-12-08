@@ -5,8 +5,7 @@ import {
   blobEncode,
   fetchContent,
   html2md,
-  html2xml,
-  md2html,
+  md2xml,
   parseMd,
   stringifyMdast,
   transformMdast,
@@ -26,9 +25,8 @@ function pipeline() {
     .use(parseMd)
     .use(transformMdast)
     .use(stringifyMdast)
-    .use(md2html, (_, params) => !params.md)
+    .use(md2xml, (_, params) => !params.md)
     .use(blobEncode)
-    .use(html2xml)
     .use(xml2package);
 }
 
