@@ -1,8 +1,8 @@
-import converterCfg from "../e2e/converter.yaml";
-import mappingCfg from "../e2e/paths.yaml";
-import {pipe} from "./util/pipe";
-import {blobEncode, fetchContent, html2md, md2html, parseMd, stringifyMdast, transformMdast, xml2package} from "./steps";
-import {toPackage} from "./wrapper/package";
+import converterCfg from "./converter.yaml";
+import mappingCfg from "./paths.yaml";
+import {pipe} from "../src/util/pipe";
+import {blobEncode, fetchContent, html2md, md2html, parseMd, stringifyMdast, transformMdast, xml2package} from "../src/steps";
+import {toPackage} from "../src/wrapper/package";
 
 function getUrl() {
   if (process.argv.length > 2) {

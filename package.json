@@ -12,7 +12,7 @@
     "e2e:build": "rimraf dist/ && webpack ./e2e/runtime.js",
     "e2e:build:prod": "rimraf dist/ && webpack ./e2e/runtime.js --mode=production",
     "e2e:serve": "rimraf dist/ && webpack ./e2e/dev-server.js && node --inspect ./dist/index.js",
-    "package": "rimraf dist/ && webpack ./src/create-package.js && node --inspect ./dist/index.js"
+    "package": "rimraf dist/ && webpack ./e2e/package.js && node --inspect ./dist/index.js"
   },
   "mocha": {
     "spec": "test/**/*.test.js",
