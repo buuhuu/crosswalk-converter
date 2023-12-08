@@ -1,7 +1,9 @@
 import { visitParents } from 'unist-util-visit-parents';
 import convert from 'xml-js';
 import skeleton from './skeleton.js';
-import { createComponentTree, getHandler, insertComponent } from './utils.js';
+import {
+  createComponentTree, getHandler, findMatchingPath, insertComponent,
+} from './utils.js';
 import handlers from './handlers/index.js';
 
 function buildPath(parents, { pathMap = new Map() }) {
@@ -25,6 +27,7 @@ export default function hast2jcr(hast, opts = {}) {
     ...skeleton,
   };
 
+  const [jcrRoot] = json.elements;
   const componentTree = createComponentTree();
   const pathMap = new Map();
 
@@ -41,13 +44,22 @@ export default function hast2jcr(hast, opts = {}) {
     if (handler) {
       const path = buildPath(parents, ctx);
       const nodeName = getNodeName(handler.name, path, ctx);
+      const getAttributes = typeof handler === 'object' ? handler.getAttributes : handler;
+      const insertFunc = typeof handler === 'object' ? handler.insert : undefined;
 
-      const attributes = handler(node, {
+      const attributes = getAttributes(node, {
         path: `${path}/${nodeName}`,
         ...ctx,
       });
 
-      insertComponent(json.elements[0], path, nodeName, attributes);
+      const parentComponent = findMatchingPath(jcrRoot, path);
+
+      if (insertFunc) {
+        insertFunc(parentComponent, nodeName, attributes);
+      } else {
+        insertComponent(parentComponent, nodeName, attributes);
+      }
+
       pathMap.set(node, `${path}/${nodeName}`);
     }
   });

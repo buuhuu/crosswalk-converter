@@ -18,42 +18,51 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-export function insertComponent(obj, path, nodeName, component) {
+export function findMatchingPath(obj, path) {
   const keys = path.split('/');
 
   const isMatchingPath = (currentKeys, targetKeys) => currentKeys.length === targetKeys.length
     && currentKeys.every((key, index) => key === targetKeys[index]);
 
-  const insert = (parentObj, currentPath) => {
+  const search = (parentObj, currentPath) => {
     const newPath = currentPath ? `${currentPath}/${parentObj.name}` : `/${parentObj.name}`;
     const childrenObj = parentObj.elements || [];
+    let matchingChild = childrenObj.find((child) => isMatchingPath([...newPath.split('/'), child.name], keys));
+    if (matchingChild) {
+      return matchingChild;
+    }
     // eslint-disable-next-line no-restricted-syntax
     for (const child of childrenObj) {
-      if (isMatchingPath([...newPath.split('/'), child.name], keys)) {
-        const elements = child.elements || [];
-        const {
-          rt, nt, children, ...rest
-        } = component;
-        child.elements = [
-          ...elements,
-          {
-            type: 'element',
-            name: nodeName,
-            attributes: {
-              'sling:resourceType': rt,
-              'jcr:primaryType': nt || 'nt:unstructured',
-              ...rest,
-            },
-            elements: children,
-          },
-        ];
-        return;
+      matchingChild = search(child, newPath);
+      if (matchingChild) {
+        return matchingChild;
       }
-      insert(child, newPath);
     }
+    return undefined;
   };
 
-  insert(obj, '');
+  return search(obj, '');
+}
+
+export function insertComponent(parent, nodeName, component) {
+  const elements = parent.elements || [];
+  const {
+    rt, nt, children, ...rest
+  } = component;
+
+  parent.elements = [
+    ...elements,
+    {
+      type: 'element',
+      name: nodeName,
+      attributes: {
+        'sling:resourceType': rt,
+        'jcr:primaryType': nt || 'nt:unstructured',
+        ...rest,
+      },
+      elements: children,
+    },
+  ];
 }
 
 export function getHandler(node, parents, ctx) {
