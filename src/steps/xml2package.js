@@ -16,9 +16,13 @@ function removeExtension(pathname) {
   return pathname.replace(`.${extension}`, '');
 }
 
+function prependContent(pathname) {
+  return pathname.startsWith('/content') ? pathname : `/content${pathname}`;
+}
+
 function getPath(url) {
   const { pathname } = url;
-  return removeExtension(pathname);
+  return prependContent(removeExtension(pathname));
 }
 
 function getFileName(pageName) {
