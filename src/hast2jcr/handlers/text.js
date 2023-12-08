@@ -1,13 +1,15 @@
 import { toHtml } from 'hast-util-to-html';
 import { insertComponent } from '../utils.js';
 
+const resourceType = 'core/franklin/components/text/v1/text';
+
 function encodeHTMLEntities(str) {
   return str.replace(/</g, '&lt;');
 }
 
-function isCollapsible({ rt }, elements) {
-  const { attributes } = elements.at(-1);
-  return rt === attributes['sling:resourceType'];
+function isCollapsible(element) {
+  const { attributes = {} } = element;
+  return attributes['sling:resourceType'] === resourceType;
 }
 
 function getRichText(node) {
@@ -26,14 +28,14 @@ function getRichText(node) {
 const text = {
   name: 'text',
   getAttributes: (node) => ({
-    rt: 'core/franklin/components/text/v1/text',
+    rt: resourceType,
     text: getRichText(node),
   }),
   insert: (parent, nodeName, component) => {
     const elements = parent.elements || [];
-    if (isCollapsible(component, elements)) {
-      const lastElement = elements.at(-1);
-      lastElement.attributes.text += component.text;
+    const previousSibling = elements.at(-1);
+    if (isCollapsible(previousSibling)) {
+      previousSibling.attributes.text += component.text;
     } else {
       insertComponent(parent, nodeName, component);
     }
