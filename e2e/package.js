@@ -12,7 +12,7 @@ import {
   html2xml,
   xml2package,
 } from '../src/steps/index.js';
-import { toPackage } from '../src/wrapper/package.js';
+import toPackage from '../src/wrapper/package.js';
 
 function getUrl() {
   if (process.argv.length > 2) {

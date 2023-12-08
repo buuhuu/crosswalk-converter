@@ -35,8 +35,7 @@ export default async function xml2package(state) {
 
   archive.pipe(output);
   // TODO: use the xml output from the previous step
-  const contentXML = state.xml;
-  // const contentXML = fs.readFileSync('./test/jcr/content.xml', 'utf8');
+  const contentXML = await state.xml;
   archive.append(contentXML, { name: `jcr_root${path}/.content.xml` });
 
   const propertiesXML = `<?xml version='1.0' encoding='UTF-8'?>
