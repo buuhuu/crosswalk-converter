@@ -3,6 +3,8 @@ import root from './root.js';
 import main from './main.js';
 import div from './div.js';
 import heading from './heading';
+import p from './paragraph.js';
+import a from './anchor.js';
 
 // Unknown tag elements end up here
 function unknown(value) {
@@ -23,7 +25,9 @@ const tag = zwitch('tagName', {
     h3: heading,
     h4: heading,
     h5: heading,
-    h6: heading
+    h6: heading,
+    p,
+    a
   }, // Need to add other handlers for title, p, img
   invalid,
   unknown,

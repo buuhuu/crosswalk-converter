@@ -1,14 +1,25 @@
 import { x } from 'xastscript';
 import { getComponentName, incrementElementCount } from './jcr/jcr-utils';
 
+function handleMetadata(hastNode, state) {
+  console.log("metadata div");
+  // TODO: handle metadata, including title, description, etc.
+  // For now, clear the children of this node, such that further processing is skipped
+  hastNode.children = [];
+  return null;
+}
+
 export default function divTag(node, state) {
-  // TODO: handle divs with className containing "metadata"
+  // Check if this is a "metadata" div
+  if (node.properties.className && node.properties.className.includes('metadata')) {
+    return handleMetadata(node, state);
+  }
 
   const commonAttributes = {
     'jcr:primaryType': 'nt:unstructured'
   };
 
-  if (state.parent === 'main') {
+  if (state.parent.name === 'root') {
     console.log('div found as direct child of the main element -> this must be a section node');
     const name = "section";
     incrementElementCount(name, state.elementCount);

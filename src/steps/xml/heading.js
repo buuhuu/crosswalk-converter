@@ -3,7 +3,7 @@ import { getComponentName, getElementText, incrementElementCount } from './jcr/j
 
 // Heading (h1 to h6) elements
 export default function heading(node, state) {
-  console.log('heading found', node);
+  console.log('heading found');
 
   const name = "title";
   incrementElementCount(name, state.elementCount);

@@ -25,7 +25,7 @@ const skeleton = u('root', [
           'sling:resourceType': 'core/franklin/components/page/v1/page',
         }
       ),
-      u('text', '\n  '),
+      u('text', '\n'),
     ],
   ),
   u('text', '\n'),

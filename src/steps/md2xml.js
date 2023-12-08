@@ -24,6 +24,7 @@ import { toXml } from 'xast-util-to-xml';
 import xmlHandler from './xml/index.js';
 import skeleton from './xml/skeleton.js';
 import { u } from 'unist-builder';
+import paragraph from './xml/paragraph';
 
 function unknown(value) {
   throw new Error(`Cannot transform node of type \`${value.type}\``);
@@ -39,45 +40,72 @@ function patch(origin, node) {
 
 // Handlers for the different types
 function text(node, state) {
-  console.log('text - ignore');
-  // TODO this must return a string
-  return node;
+  console.log('text node');
+  // Check if this node is just whitespace
+  if (node.value && node.value.trim().length < 1) {
+    console.log(' - whitespace');
+    // Return as-is
+    return node;
+  }
+  // Otherwise, defer to paragraph to handle
+  console.log(` - actual text: ${node.value}`);
+  return paragraph(node, state);
 }
 
 function raw(node, state) {
   console.log('raw element', node.value);
-  return node;
+  state.parent.attributes.text += node.value;
+  return null;
 }
 
-function element(node, state) {
-  console.log('found element', node.tagName);
+function element(hastNode, state) {
+  console.log('found element', hastNode.tagName);
 
   const children = [];
   let index = -1;
 
   const childState = {
     elementCount: {},
-    ...state
+    ...state, // Order is important: will overwrite elementCount with value from state
   };
 
-  const nodeProps = xmlHandler(node, childState);
+  const currentElement = xmlHandler(hastNode, childState);
 
-  childState.parent = node.tagName;
+  childState.lastSibling = null // Reset this value before we iterate over child nodes
 
-  while (++index < node.children.length) {
-    const child = node.children[index];
-
-    children[index] = (toXast(child, childState));
+  // Keep a ref to the parent in childState
+  if (currentElement) {
+    // Only overwrite when currentElement is defined — otherwise keep a ref to the current parent
+    childState.parent = currentElement;
   }
 
-  const result = {
-    type: 'element',
-    name: node.tagName,
-    ...nodeProps,
-    children,
-  };
-  patch(node, result); // Patch replaces each node with its XML representation
-  return result;
+  // Process children, if any
+  while (++index < hastNode.children.length) {
+    const hastChild = hastNode.children[index];
+
+    // Add a reference in state to the previous sibling, if there is one
+    childState.lastSibling = children.length < 1 ? null : children[children.length - 1];
+
+    // Call toXast recursively to process child nodes
+    const xmlNode = toXast(hastChild, childState);
+    // xmlNode can be null, if it's contents was appended to it's lastSibling node (ie. text)
+    if (xmlNode) {
+      children.push(xmlNode);
+    }
+  }
+
+  // If currentElement is not defined, this node's contents was appended to another node
+  if (currentElement) {
+    const result = {
+      type: 'element',
+      name: hastNode.tagName,
+      ...currentElement,
+      children,
+    };
+    patch(hastNode, result); // Patch replaces each node with its XML representation
+    return result;
+  }
+  return null;
 }
 
 const toXast = zwitch('type', {
@@ -114,16 +142,16 @@ export default function md2xml(state) {
     createPageBlocks({ content });
 
     // Using hastscript to create virtual hast trees (for HTML)
-    const doc = h('html', [h('body', [h('main', content.hast)])]);
+    const hastDoc = h('html', [h('body', [h('main', content.hast)])]);
 
-    hastRaw(doc);
-    rehypeFormat()(doc);
+    hastRaw(hastDoc);
+    rehypeFormat()(hastDoc);
 
     // Convert hast tree to a JCR compatible xast tree
-    let jcrTree = toXast(select('element [tagName=main]', doc));
+    let xastJcrDoc = toXast(select('element [tagName=main]', hastDoc));
 
     // Merge JCR tree with skeleton tree
-    jcrTree = mergeWithSkeleton(jcrTree);
+    xastJcrDoc = mergeWithSkeleton(xastJcrDoc);
 
     // const xast = toXast(doc);
     // const xml = toXml(xast);
@@ -136,7 +164,7 @@ export default function md2xml(state) {
 
     const xmlState = {
       ...state,
-      html: toXml(jcrTree, { closeEmptyElements: true }),
+      html: toXml(xastJcrDoc, { closeEmptyElements: true }),
       contentType: 'application/xml',
     };
 

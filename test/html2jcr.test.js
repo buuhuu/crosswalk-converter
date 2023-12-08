@@ -19,8 +19,6 @@ import {
   stringifyMdast,
 } from '../src/steps/index.js';
 import md2xml from '../src/steps/md2xml.js';
-import skeleton from '../src/steps/xml/skeleton';
-import { toXml } from 'xast-util-to-xml';
 
 function loadContent(state) {
   // This needs to use the OUTPUT of import.js
@@ -78,12 +76,10 @@ function loadBasicContent(state) {
   </head>
   <body>
     <div>
-
       <h2>Heading 2</h2>
       <h3>Heading 3</h3>
       <p><a href="https://aem.live">CTA</a></p>
       <p>This is <u>some</u> <em>formatted</em> <strong>rich text</strong>. With <sup>many</sup> <sub>formats</sub>.</p>
-
     </div>
   </body>
 </html>`;
