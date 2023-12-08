@@ -5,20 +5,18 @@ import {
   blobEncode,
   fetchContent,
   html2md,
+  html2xml,
   md2html,
   parseMd,
   stringifyMdast,
   transformMdast,
-  html2xml,
   xml2package,
 } from '../src/steps/index.js';
 import toPackage from '../src/wrapper/package.js';
+import getArg from '../src/util/process-utils.js';
 
 function getUrl() {
-  if (process.argv.length > 2) {
-    return new URL(process.argv[2]);
-  }
-  return new URL('http://www.aem.live/developer');
+  return new URL(getArg() || 'http://www.aem.live/developer');
 }
 
 function pipeline() {
@@ -35,12 +33,11 @@ function pipeline() {
 }
 
 const url = getUrl();
-const { origin = 'http://www.aem.live', pathname = '/developer' } = url;
-const requestPath = pathname;
+const requestPath = url.pathname;
 const packageHandler = pipeline().wrap(toPackage, {
   converterCfg,
   mappingCfg,
-  origin,
+  origin: url.origin,
   requestPath,
 });
 

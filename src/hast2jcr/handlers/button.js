@@ -12,13 +12,17 @@ function getType(node) {
 }
 
 function getLink(node) {
+  const [buttonNode] = node.children;
+  if (!buttonNode || !buttonNode.properties) {
+    return { href: '', text: '' };
+  }
   if (getType(node)) {
-    const { href } = node.children[0].children[0].properties;
-    const text = node.children[0].children[0].children[0].value;
+    const { href } = buttonNode.children[0].properties;
+    const text = buttonNode.children[0].children[0].value;
     return { href, text };
   }
-  const { href } = node.children[0].properties;
-  const text = node.children[0].children[0].value;
+  const { href } = buttonNode.properties;
+  const text = buttonNode.children[0].value;
   return { href, text };
 }
 

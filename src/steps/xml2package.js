@@ -1,5 +1,6 @@
 import fs from 'fs';
 import archiver from 'archiver';
+import getArg from '../util/process-utils.js';
 
 function getUrl(state) {
   const { originUrl } = state;
@@ -10,22 +11,29 @@ function getUrl(state) {
   return new URL(`${origin}${path}`);
 }
 
-function getPath(url) {
-  const { pathname } = url;
-  if (pathname.indexOf('.') === -1) {
-    return pathname;
-  }
+function removeExtension(pathname) {
   const extension = pathname.split('.').pop();
   return pathname.replace(`.${extension}`, '');
+}
+
+function getPath(url) {
+  const { pathname } = url;
+  return removeExtension(pathname);
+}
+
+function getFileName(pageName) {
+  const filename = getArg('filename') || pageName;
+  return removeExtension(filename);
 }
 
 export default async function xml2package(state) {
   const url = getUrl(state);
   const path = getPath(url);
   const pageName = path.split('/').pop();
+  const filename = getFileName(pageName);
   const author = 'anonymous';
   const now = new Date().toISOString();
-  const output = fs.createWriteStream(`${pageName}.zip`);
+  const output = fs.createWriteStream(`${filename}.zip`);
   const archive = archiver('zip');
 
   output.on('close', () => {
