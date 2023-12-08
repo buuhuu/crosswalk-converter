@@ -1,21 +1,24 @@
-import {DEFAULT_CONVERTER_CFG, DEFAULT_MAPPING_CFG} from "./mocha.js";
+import { h } from 'hastscript';
 
+/* eslint-disable-next-line import/prefer-default-export */
 export function toPackage(pipe, opts = {}) {
   const {
-    mappingCfg = DEFAULT_MAPPING_CFG,
-    converterCfg = DEFAULT_CONVERTER_CFG,
+    mappingCfg,
+    converterCfg,
     origin,
-    requestPath,
+    path,
   } = opts;
-  
+
+  pipe = pipe
+    .use(html2xml)
+    .use(xml2package);
   return async function () {
-    const { error, html } = await pipe.run(
-      { origin,
-        path: requestPath
-      },
-      {},
-      { mappingCfg, converterCfg },
+    const { error, html } = await pipe.run({
+      origin,
+      path,
+    },
+    {},
+    { mappingCfg, converterCfg },
     );
-    
   }
 }

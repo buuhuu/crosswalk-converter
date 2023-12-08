@@ -59,7 +59,12 @@
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
     "yaml-loader": "^0.8.0",
-    "zip-webpack-plugin": "^4.0.1"
+    "zip-webpack-plugin": "^4.0.1",
+    "rehype": "^13.0.1",
+    "rehype-parse": "^9.0.0",
+    "unist-util-inspect": "^8.0.0",
+    "unist-util-select": "^5.1.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

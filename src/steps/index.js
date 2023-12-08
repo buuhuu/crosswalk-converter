@@ -17,6 +17,7 @@ import parseMd from './parse-md.js';
 import transformMdast, { DEFAULT_TRANSFORMERS } from './transform-mdast.js';
 import stringifyMdast from './stringify-mdast.js';
 import blobEncode from './blob-encode.js';
+import html2xml from './html2xml.js';
 import xml2package from './xml2package.js';
 
 export {
@@ -28,5 +29,6 @@ export {
   DEFAULT_TRANSFORMERS,
   stringifyMdast,
   blobEncode,
+  html2xml,
   xml2package,
 };
