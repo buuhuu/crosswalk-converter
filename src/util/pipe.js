@@ -89,6 +89,7 @@ export function pipe() {
    */
   function wrap(fn, opts = {}) {
     fn = fn(self, opts);
+    /* eslint-disable-next-line func-names */
     return function (...args) {
       return fn.apply(this, args);
     };

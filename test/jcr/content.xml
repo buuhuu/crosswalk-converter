@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:lastModified="{Date}2023-10-24T15:36:04.804+02:00"
+        cq:lastModifiedBy="admin"
+        cq:template="/libs/core/franklin/templates/page"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="Magazine"
+        sling:resourceType="core/franklin/components/page/v1/page">
+        <root
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="core/franklin/components/root/v1/root">
+            <section
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="core/franklin/components/section/v1/section">
+                <title
+                    jcr:created="{Date}2023-10-24T15:34:27.383+02:00"
+                    jcr:createdBy="admin"
+                    jcr:lastModified="{Date}2023-10-24T15:34:34.516+02:00"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    jcr:title="Magazine v1"
+                    sling:resourceType="core/franklin/components/title/v1/title"
+                    type="h1"/>
+                <block
+                    jcr:created="{Date}2023-10-24T15:34:45.101+02:00"
+                    jcr:createdBy="admin"
+                    jcr:lastModified="{Date}2023-10-24T15:34:45.101+02:00"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="core/franklin/components/block/v1/block"
+                    model="featured-article"
+                    name="Featured Article"
+                    reference="/content/wknd-xwalk/us/en/magazine/western-australia"/>
+                <title_827668872
+                    jcr:created="{Date}2023-10-24T15:35:45.161+02:00"
+                    jcr:createdBy="admin"
+                    jcr:lastModified="{Date}2023-10-24T15:36:04.802+02:00"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    jcr:title="All Articles"
+                    sling:resourceType="core/franklin/components/title/v1/title"
+                    type="h2"/>
+            </section>
+        </root>
+    </jcr:content>
+    <western-australia/>
+    <guide-la-skateparks/>
+    <arctic-surfing/>
+</jcr:root>

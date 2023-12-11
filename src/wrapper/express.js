@@ -186,7 +186,7 @@ export function toExpress(pipe, opts = {}) {
     .use(fixHtml, (_, params) => !params.md && !params.semanticHtml)
     // do not encode blobs
     .use(blobEncode);
-
+  /* eslint-disable-next-line func-names */
   return function (req, res) {
     // eslint-disable-next-line prefer-const
     let { path } = req;

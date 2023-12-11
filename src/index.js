@@ -14,6 +14,7 @@ import { pipeline } from './pipeline.js';
 import { toExpress } from './wrapper/express.js';
 import { toRuntime } from './wrapper/runtime.js';
 import { toMocha } from './wrapper/mocha.js';
+import { toPackage } from './wrapper/package.js';
 
 // reexport specifics to extend the pipeline
 export { transformMdast, DEFAULT_TRANSFORMERS } from './steps/index.js';
@@ -23,4 +24,5 @@ export {
   toExpress,
   toRuntime,
   toMocha,
+  toPackage,
 };
