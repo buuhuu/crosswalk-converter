@@ -1,11 +1,7 @@
 import { toHtml } from 'hast-util-to-html';
-import { insertComponent } from '../utils.js';
+import { encodeHTMLEntities, insertComponent } from '../utils.js';
 
 const resourceType = 'core/franklin/components/text/v1/text';
-
-function encodeHTMLEntities(str) {
-  return str.replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/&/g, '&amp;');
-}
 
 function isCollapsible(element) {
   /*

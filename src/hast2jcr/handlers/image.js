@@ -1,9 +1,13 @@
 import { select } from 'unist-util-select';
+import { encodeHTMLEntities } from '../utils';
 
 function getImage(node) {
   const $image = select('element[tagName=img]', node);
   const { alt, src } = $image.properties;
-  return { alt, src };
+  return {
+    alt: encodeHTMLEntities(alt),
+    src: encodeHTMLEntities(src)
+  };
 }
 
 export default function image(node) {

@@ -63,6 +63,19 @@ export function insertComponent(parent, nodeName, component) {
   ];
 }
 
+function hasSingleChildElement(node) {
+  return node.children.filter((child) => {
+    if (child.type === 'element') {
+      return true;
+    } else if (child.type === 'text') {
+      // Check if this is an empty text node
+      return child.value.trim().length > 0;
+    }
+    // True for other types of nodes (ie. raw)
+    return true;
+  }).length === 1;
+}
+
 /**
  * Pick a handler based on the semantic HTML structure
  *
@@ -87,7 +100,7 @@ export function getHandler(node, parents, ctx) {
     }
   }
   if (node.tagName === 'p') {
-    if (node.children.filter((child) => child.type === 'element').length === 1) {
+    if (hasSingleChildElement(node)) {
       if (matchStructure(node, h('p', [h('strong', [h('a')])]))
         || matchStructure(node, h('p', [h('a')]))
         || matchStructure(node, h('p', [h('em', [h('a')])]))) {
@@ -130,4 +143,8 @@ export function createComponentTree() {
 
     return updateNestedTree(tree, path);
   };
+}
+
+export function encodeHTMLEntities(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
