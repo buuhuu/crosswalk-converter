@@ -1,5 +1,8 @@
-import { h } from 'hastscript';
 import { x } from 'xastscript';
+
+export function encodeHTMLEntities(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+}
 
 export function matchStructure(node, template) {
   if (node.tagName !== template.tagName) {
@@ -63,11 +66,11 @@ export function insertComponent(parent, nodeName, component) {
   ];
 }
 
-function hasSingleChildElement(node) {
+export function hasSingleChildElement(node) {
   return node.children.filter((child) => {
     if (child.type === 'element') {
       return true;
-    } else if (child.type === 'text') {
+    } if (child.type === 'text') {
       // Check if this is an empty text node
       return child.value.trim().length > 0;
     }
@@ -82,40 +85,16 @@ function hasSingleChildElement(node) {
  * @param node
  * @param parents
  * @param ctx
- * @return {ScrollLogicalPosition|undefined|*|number|string}
+ * @return {handler|undefined} A handler object that wants to process this node or undefined
  */
 export function getHandler(node, parents, ctx) {
-  // TODO: each handler should implement its own 'use' logic
   const { handlers } = ctx;
-  if (node.tagName === 'div') {
-    if (parents[parents.length - 1]?.tagName === 'main') {
-      return handlers.section;
-    }
-    if (getHandler(parents[parents.length - 1], [...parents.slice(0, -1)], ctx)?.name === 'section') {
-      const blockName = node?.properties?.className[0];
-      if (blockName === 'columns') {
-        return handlers.columns;
-      }
-      return handlers.block;
-    }
-  }
-  if (node.tagName === 'p') {
-    if (hasSingleChildElement(node)) {
-      if (matchStructure(node, h('p', [h('strong', [h('a')])]))
-        || matchStructure(node, h('p', [h('a')]))
-        || matchStructure(node, h('p', [h('em', [h('a')])]))) {
-        return handlers.button;
-      }
-      if (matchStructure(node, h('p', [h('picture', [h('img')])]))
-        || matchStructure(node, h('p', [h('img')]))) {
-        return handlers.image;
-      }
-    }
-
-    return handlers.text;
-  }
-  if (node.tagName.match(/h[1-6]/)) {
-    return handlers.title;
+  // Each handler must include its own `use` function to determine
+  // if it wants to process the current node.
+  const [name, handler] = Object.entries(handlers)
+    .find(([, entry]) => entry.use(node, parents, ctx)) || [];
+  if (name) {
+    return { name, ...handler };
   }
   return undefined;
 }
@@ -143,8 +122,4 @@ export function createComponentTree() {
 
     return updateNestedTree(tree, path);
   };
-}
-
-export function encodeHTMLEntities(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }

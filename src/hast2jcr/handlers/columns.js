@@ -1,3 +1,5 @@
+import { getHandler } from '../utils.js';
+
 function getRows(node, ctx) {
   const elements = [];
   const { pathMap, path } = ctx;
@@ -28,12 +30,27 @@ function getRows(node, ctx) {
   return elements;
 }
 
-export default function columns(node, ctx) {
-  const children = getRows(node, ctx);
-  return {
-    rt: 'core/franklin/components/columns/v1/columns',
-    children,
-    columns: children.length,
-    rows: children[0].elements.length,
-  };
-}
+const columns = {
+  use: (node, parents, ctx) => {
+    if (node.tagName === 'div') {
+      if (getHandler(parents[parents.length - 1], [...parents.slice(0, -1)], ctx)?.name === 'section') {
+        const blockName = node?.properties?.className[0];
+        if (blockName === 'columns') {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
+  getAttributes: (node, ctx) => {
+    const children = getRows(node, ctx);
+    return {
+      rt: 'core/franklin/components/columns/v1/columns',
+      children,
+      columns: children.length,
+      rows: children[0].elements.length,
+    };
+  },
+};
+
+export default columns;

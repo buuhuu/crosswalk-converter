@@ -23,7 +23,7 @@ export default async function md2xml(state, params, opts) {
   const { mdast } = state;
 
   if (mdast) {
-    // Covnert mdast to hast
+    // Convert mdast to hast
     const main = mdast2hast(mdast, {
       handlers: {
         ...defaultHandlers,

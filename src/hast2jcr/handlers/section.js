@@ -22,11 +22,22 @@ function getMetaData(node) {
   return data;
 }
 
-export default function section(node) {
-  const metaData = getMetaData(node);
-  const attributes = {
-    rt: 'core/franklin/components/section/v1/section',
-    ...metaData,
-  };
-  return attributes;
-}
+const section = {
+  use: (node, parents) => {
+    if (node.tagName === 'div') {
+      if (parents[parents.length - 1]?.tagName === 'main') {
+        return true;
+      }
+    }
+    return false;
+  },
+  getAttributes: (node) => {
+    const metaData = getMetaData(node);
+    return {
+      rt: 'core/franklin/components/section/v1/section',
+      ...metaData,
+    };
+  },
+};
+
+export default section;

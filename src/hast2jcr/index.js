@@ -40,12 +40,12 @@ export default function hast2jcr(hast, opts = {}) {
   };
 
   visitParents(hast, 'element', (node, parents) => {
+    // Find a handler that wants to process/convert this node
     const handler = getHandler(node, parents, ctx);
     if (handler) {
       const path = buildPath(parents, ctx);
       const nodeName = getNodeName(handler.name, path, ctx);
-      const getAttributes = typeof handler === 'object' ? handler.getAttributes : handler;
-      const insertFunc = typeof handler === 'object' ? handler.insert : undefined;
+      const { getAttributes, insert: insertFunc } = handler;
 
       const attributes = getAttributes(node, {
         path: `${path}/${nodeName}`,
@@ -68,7 +68,7 @@ export default function hast2jcr(hast, opts = {}) {
     compact: false,
     ignoreComment: true,
     spaces: 4,
-    elementsKey: "children"
+    elementsKey: 'children',
   };
 
   return convert.json2xml(json, options);
