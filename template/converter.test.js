@@ -21,7 +21,10 @@ describe('Converter', async () => {
   const fixturesFolder = path.resolve(__testdir, 'fixtures');
   const testRunner = pipeline().wrap(toMocha, {
     transform,
-    converterCfg,
+    converterCfg: {
+      ...converterCfg,
+      origin: 'https://www.test.run',
+    },
     mappingCfg,
     fixturesFolder,
   });
