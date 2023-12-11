@@ -63,7 +63,6 @@
     "webpack": "^5.89.0",
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
-    "xastscript": "^4.0.0",
     "xml-js": "^1.6.11",
     "yaml-loader": "^0.8.0",
     "zip-webpack-plugin": "^4.0.1"
