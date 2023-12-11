@@ -1,4 +1,5 @@
 import { h } from 'hastscript';
+import { x } from 'xastscript';
 
 export function matchStructure(node, template) {
   if (node.tagName !== template.tagName) {
@@ -26,7 +27,7 @@ export function findMatchingPath(obj, path) {
 
   const search = (parentObj, currentPath) => {
     const newPath = currentPath ? `${currentPath}/${parentObj.name}` : `/${parentObj.name}`;
-    const childrenObj = parentObj.elements || [];
+    const childrenObj = parentObj.children || [];
     let matchingChild = childrenObj.find((child) => isMatchingPath([...newPath.split('/'), child.name], keys));
     if (matchingChild) {
       return matchingChild;
@@ -45,27 +46,33 @@ export function findMatchingPath(obj, path) {
 }
 
 export function insertComponent(parent, nodeName, component) {
-  const elements = parent.elements || [];
+  const elements = parent.children || [];
   const {
     rt, nt, children, ...rest
   } = component;
 
-  parent.elements = [
+  const compNode = x(nodeName, {
+    'sling:resourceType': rt,
+    'jcr:primaryType': nt || 'nt:unstructured',
+    ...rest,
+  }, children);
+
+  parent.children = [
     ...elements,
-    {
-      type: 'element',
-      name: nodeName,
-      attributes: {
-        'sling:resourceType': rt,
-        'jcr:primaryType': nt || 'nt:unstructured',
-        ...rest,
-      },
-      elements: children,
-    },
+    compNode
   ];
 }
 
+/**
+ * Pick a handler based on the semantic HTML structure
+ * 
+ * @param node
+ * @param parents
+ * @param ctx
+ * @return {ScrollLogicalPosition|undefined|*|number|string}
+ */
 export function getHandler(node, parents, ctx) {
+  //TODO: each handler should implement its own 'use' logic
   const { handlers } = ctx;
   if (node.tagName === 'div') {
     if (parents[parents.length - 1]?.tagName === 'main') {

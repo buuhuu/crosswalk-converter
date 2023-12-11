@@ -27,7 +27,7 @@ export default function hast2jcr(hast, opts = {}) {
     ...skeleton,
   };
 
-  const [jcrRoot] = json.elements;
+  const [jcrRoot] = json.children;
   const componentTree = createComponentTree();
   const pathMap = new Map();
 
@@ -68,6 +68,7 @@ export default function hast2jcr(hast, opts = {}) {
     compact: false,
     ignoreComment: true,
     spaces: 4,
+    elementsKey: "children"
   };
 
   return convert.json2xml(json, options);

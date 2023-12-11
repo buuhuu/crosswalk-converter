@@ -4,7 +4,7 @@ import { insertComponent } from '../utils.js';
 const resourceType = 'core/franklin/components/text/v1/text';
 
 function encodeHTMLEntities(str) {
-  return str.replace(/</g, '&lt;');
+  return str.replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
 function isCollapsible(element) {
@@ -32,7 +32,7 @@ const text = {
     text: getRichText(node),
   }),
   insert: (parent, nodeName, component) => {
-    const elements = parent.elements || [];
+    const elements = parent.children || [];
     const previousSibling = elements.at(-1);
     if (isCollapsible(previousSibling)) {
       previousSibling.attributes.text += component.text;
