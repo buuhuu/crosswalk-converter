@@ -59,20 +59,20 @@ export function insertComponent(parent, nodeName, component) {
 
   parent.children = [
     ...elements,
-    compNode
+    compNode,
   ];
 }
 
 /**
  * Pick a handler based on the semantic HTML structure
- * 
+ *
  * @param node
  * @param parents
  * @param ctx
  * @return {ScrollLogicalPosition|undefined|*|number|string}
  */
 export function getHandler(node, parents, ctx) {
-  //TODO: each handler should implement its own 'use' logic
+  // TODO: each handler should implement its own 'use' logic
   const { handlers } = ctx;
   if (node.tagName === 'div') {
     if (parents[parents.length - 1]?.tagName === 'main') {
@@ -87,13 +87,14 @@ export function getHandler(node, parents, ctx) {
     }
   }
   if (node.tagName === 'p') {
-    if (node.children.length === 1) {
+    if (node.children.filter((child) => child.type === 'element').length === 1) {
       if (matchStructure(node, h('p', [h('strong', [h('a')])]))
         || matchStructure(node, h('p', [h('a')]))
         || matchStructure(node, h('p', [h('em', [h('a')])]))) {
         return handlers.button;
       }
-      if (matchStructure(node, h('p', [h('picture', [h('img')])]))) {
+      if (matchStructure(node, h('p', [h('picture', [h('img')])]))
+        || matchStructure(node, h('p', [h('img')]))) {
         return handlers.image;
       }
     }

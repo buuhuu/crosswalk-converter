@@ -4,12 +4,16 @@ import { insertComponent } from '../utils.js';
 const resourceType = 'core/franklin/components/text/v1/text';
 
 function encodeHTMLEntities(str) {
-  return str.replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  return str.replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/&/g, '&amp;');
 }
 
 function isCollapsible(element) {
+  /*
   const { attributes = {} } = element;
   return attributes['sling:resourceType'] === resourceType;
+   */
+  // Collapsing adjacent text nodes into a single text component is currently not compatible
+  return false;
 }
 
 function getRichText(node) {
