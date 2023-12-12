@@ -18,7 +18,11 @@ export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
   const { authorization } = params;
   const { converterCfg, mappingCfg } = opts;
-  const { origin, suffix } = converterCfg || {};
+  const { suffix } = converterCfg || {};
+  let origin = state.origin;
+  if (!origin && converterCfg) {
+    origin = converterCfg.origin;
+  }
 
   if (!origin) {
     throw new Error('\'origin\' not set in converter.yaml');
