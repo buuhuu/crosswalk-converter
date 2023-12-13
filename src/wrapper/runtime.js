@@ -27,7 +27,6 @@ export function toRuntime(pipe, opts = {}) {
     } = process.env;
     const queryString = params.__ow_query;
     const authorization = params.__ow_headers ? params.__ow_headers.authorization : '';
-    const cookie = params.__ow_headers ? params.__ow_headers.cookie : '';
     let path = params.__ow_path;
 
     if (path.endsWith('.md')) {
@@ -94,7 +93,7 @@ export function toRuntime(pipe, opts = {}) {
         error, blob, html, md, contentType,
       } = await pipe.run(
         { path, queryString },
-        { ...params, authorization, cookie },
+        { ...params, authorization },
         opts,
       );
       const statusCode = error?.code || 200;
