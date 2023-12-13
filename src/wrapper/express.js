@@ -28,7 +28,9 @@ import { isBinary } from '../util/media-utils.js';
 import { toBuffer } from '../steps/blob-encode.js';
 import originalMd2Html from '../steps/md2html.js';
 
-const { AEM_USER, AEM_PASSWORD, AEM_TOKEN } = process.env;
+const {
+  AEM_USER, AEM_PASSWORD, AEM_TOKEN, LOGIN_TOKEN,
+} = process.env;
 const LOCALHOST = 'http://127.0.0.1';
 const CACHE = {};
 
@@ -200,6 +202,8 @@ export function toExpress(pipe, opts = {}) {
         requestHeaders.authorization = `Bearer ${AEM_TOKEN}`;
       } else if (AEM_USER && AEM_PASSWORD) {
         requestHeaders.authorization = `Basic ${Buffer.from(`${AEM_USER}:${AEM_PASSWORD}`).toString('base64')}`;
+      } else if (LOGIN_TOKEN) {
+        requestHeaders.cookie = `login-token=${LOGIN_TOKEN}`;
       }
     }
 

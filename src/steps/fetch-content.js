@@ -16,7 +16,7 @@ import { isBinary } from '../util/media-utils.js';
 
 export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
-  const { authorization } = params;
+  const { authorization, cookie } = params;
   const { converterCfg, mappingCfg } = opts;
   const { origin, suffix } = converterCfg || {};
 
@@ -38,6 +38,8 @@ export default async function fetchContent(state, params, opts) {
   const requestHeaders = { 'cache-control': 'no-cache' };
   if (authorization) {
     requestHeaders.authorization = authorization;
+  } else if (cookie) {
+    requestHeaders.cookie = cookie;
   }
 
   const resp = await fetch(originUrl, { headers: { ...requestHeaders } });
