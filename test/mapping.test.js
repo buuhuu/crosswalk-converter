@@ -43,6 +43,7 @@ describe('Mapping', () => {
       ['/global/:/,/global/en:/', '/.html', '/global/en.html'],
       ['/global/:/,/global/en:/', '/de.html', '/global/de.html'],
       ['/global/:/,/global/en:/', '/en/foobar.html', '/global/en/foobar.html'],
+      ['/site/header.json:/.helix/headers.json', '/.helix/headers.json', '/site/header.json'],
     ].forEach(([mapping, from, to]) => {
       it(`${mapping} maps ${from} to ${to}`, () => assert.equal(to, mapInbound(from, { mappings: mapping.split(',') })));
     });
@@ -91,6 +92,7 @@ describe('Mapping', () => {
       ['/global/:/,/global/en:/', '/global/en.html', '/'],
       ['/global/:/,/global/en:/', '/global/de.html', '/de'],
       ['/global/:/,/global/en:/', '/global/en/foobar.html', '/en/foobar'],
+      ['/site/header.json:/.helix/headers.json', '/site/header.json', '/.helix/headers.json'],
     ].forEach(([mapping, from, to]) => {
       it(`${mapping} maps ${from} to ${to}`, () => assert.equal(to, mapOutbound(from, { mappings: mapping.split(',') })));
     });

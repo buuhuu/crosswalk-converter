@@ -71,7 +71,7 @@ export function mapInbound(franklinPath, cfg) {
   return withoutQueryStringAndAnchor(franklinPath, (originalPath) => {
     let path = originalPath;
     let extension = '';
-    const extensionStart = path.indexOf('.');
+    const extensionStart = path.lastIndexOf('.');
     if (extensionStart >= 0) {
       extension = path.substring(extensionStart);
       path = path.substring(0, path.length - extension.length);
@@ -121,7 +121,7 @@ export function mapOutbound(aemPath, cfg) {
     // remove extension, if any
     let path = originalPath;
     let extension = '';
-    const extensionStart = path.indexOf('.');
+    const extensionStart = path.lastIndexOf('.');
     if (extensionStart >= 0) {
       extension = path.substring(extensionStart);
       path = path.substring(0, path.length - extension.length);
