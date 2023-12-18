@@ -128,8 +128,9 @@ For use case where the origin requires authorization it is possible to specify t
 1.  Add a `Authorization` header to the request using a browser extension. The header will be passed through to the origin.
 2. Set `AEM_USER` and `AEM_PASSWORD` environment variables to add a basic `Authorization` header to the origin request.
 3. Set a `AEM_TOKEN` environment variable to add a bearer `Authorization` header to the origin request.
+4. Set a `AEM_LOGIN_TOKEN` environment variable to add a `login-token` cookie to the origin request.
 
-For (2) and (3) it is possible to create a `.env` file in the project root with the environment variables which will be read with using [dotenv/config](https://github.com/motdotla/dotenv) when starting the converter.
+For  the options (2),(3) and (4) it is possible to create a `.env` file in the project root with the environment variables which will be read with using [dotenv/config](https://github.com/motdotla/dotenv) when starting the converter.
 
 ## Implementation Details 
 
