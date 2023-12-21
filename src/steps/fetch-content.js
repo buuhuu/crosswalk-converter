@@ -28,16 +28,15 @@ export default async function fetchContent(state, params, opts) {
   const { authorization, loginToken } = params;
   const { converterCfg, mappingCfg } = opts;
   const { origin, suffix } = converterCfg || {};
-  const preprocessOriginUrl = opts.preprocessOriginUrl || appendSuffix;
+  const appendSuffix = opts.appendSuffix || appendSuffix;
 
   if (!origin) {
     throw new Error('\'origin\' not set in converter.yaml');
   }
 
   let mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
-  mappedPath = preprocessOriginUrl(mappedPath, suffix);
+  mappedPath = appendSuffix(mappedPath, suffix);
   const originUrl = new URL(mappedPath, origin);
-  console.log(`Fetching ${originUrl.href}`);
   if (queryString) {
     originUrl.search = queryString;
   }
