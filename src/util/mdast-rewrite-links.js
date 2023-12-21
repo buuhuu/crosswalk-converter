@@ -56,27 +56,26 @@ function findFirstText(children) {
   return null;
 }
 
-function isCanonical(node, ancestors) {
-  if (node.type === 'link') {
-    const block = ancestors.find((ancestor) => ancestor.type === 'gridTable');
-    if (block) {
-      const [header] = block.children;
-      if (header && header.type === 'gtHeader') {
-        let text = findFirstText(header.children);
-        if (text.toLowerCase() === 'metadata') {
-          // metadata block
-          const reversed = ancestors.reverse();
-          const row = reversed.find((ancestor) => ancestor.type === 'gtRow');
-          if (row) {
-            text = findFirstText(row.children);
-            if (text.toLowerCase() === 'canonical') {
-              return true;
-            }
+function isCanonical(ancestors) {
+  const block = ancestors.find((ancestor) => ancestor.type === 'gridTable');
+  if (block) {
+    const [header] = block.children;
+    if (header && header.type === 'gtHeader') {
+      let text = findFirstText(header.children);
+      if (text.toLowerCase() === 'metadata') {
+        // metadata block
+        const reversed = ancestors.reverse();
+        const row = reversed.find((ancestor) => ancestor.type === 'gtRow');
+        if (row) {
+          text = findFirstText(row.children);
+          if (text.toLowerCase() === 'canonical') {
+            return true;
           }
         }
       }
     }
   }
+
   return false;
 }
 
@@ -91,24 +90,18 @@ export function rewriteLinks(options = {}) {
       liveUrls = liveUrls
         .filter((url) => !!url)
         .map((url) => new URL(url));
-      const identifiers = new Set();
       // eslint-disable-next-line no-unused-vars
-      visitParents(tree, ['link', 'definition'], (node, ancestors) => {
-        const { type, identifier, url } = node;
-        if (type === 'link' || (type === 'definition' && identifiers.delete(identifier))) {
-          const canonical = isCanonical(node, ancestors);
-          const link = rewriteLink(url, origin, liveUrls, mappingCfg, canonical);
-          if (canonical) {
-            const firstChild = node.children[0];
-            if (firstChild && firstChild.type === 'text' && firstChild.value === node.url) {
-              firstChild.value = link;
-            }
+      visitParents(tree, ['link'], (node, ancestors) => {
+        const { url } = node;
+        const canonical = isCanonical(ancestors);
+        const link = rewriteLink(url, origin, liveUrls, mappingCfg, canonical);
+        if (canonical) {
+          const firstChild = node.children[0];
+          if (firstChild && firstChild.type === 'text' && firstChild.value === node.url) {
+            firstChild.value = link;
           }
-          node.url = link;
         }
-        if (type === 'imageReference') {
-          identifiers.add(identifier);
-        }
+        node.url = link;
       });
     }
   };
