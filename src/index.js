@@ -16,7 +16,11 @@ import { toRuntime } from './wrapper/runtime.js';
 import { toMocha } from './wrapper/mocha.js';
 
 // reexport specifics to extend the pipeline
-export { transformMdast, DEFAULT_TRANSFORMERS } from './steps/index.js';
+export {
+  transformMdast,
+  DEFAULT_TRANSFORMERS,
+  fetchContent,
+} from './steps/index.js';
 
 export {
   pipeline,

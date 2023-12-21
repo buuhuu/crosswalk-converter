@@ -14,23 +14,29 @@ import fetch from 'node-fetch';
 import { mapInbound } from '../util/mapping.js';
 import { isBinary } from '../util/media-utils.js';
 
+function defaultAppendSuffix(mappedPath, suffix) {
+  // if suffix is defined and the mapped path has no extension, add suffix
+  if (suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
+    /* eslint-disable no-param-reassign */
+    mappedPath += suffix;
+  }
+  return mappedPath;
+}
+
 export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
   const { authorization, loginToken } = params;
   const { converterCfg, mappingCfg } = opts;
   const { origin, suffix } = converterCfg || {};
+  const appendSuffix = opts.appendSuffix || defaultAppendSuffix;
 
   if (!origin) {
     throw new Error('\'origin\' not set in converter.yaml');
   }
 
   let mappedPath = mapInbound(path, mappingCfg || { mappings: ['/:/'] });
-  // if suffix is defined and the mapped path has no extension, add suffix
-  if (suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
-    mappedPath += suffix;
-  }
+  mappedPath = appendSuffix(mappedPath, suffix);
   const originUrl = new URL(mappedPath, origin);
-
   if (queryString) {
     originUrl.search = queryString;
   }
