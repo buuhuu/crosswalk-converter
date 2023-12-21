@@ -14,7 +14,7 @@ import fetch from 'node-fetch';
 import { mapInbound } from '../util/mapping.js';
 import { isBinary } from '../util/media-utils.js';
 
-function appendSuffix(mappedPath, suffix) {
+function defaultAppendSuffix(mappedPath, suffix) {
   // if suffix is defined and the mapped path has no extension, add suffix
   if (suffix && !mappedPath.includes('.') && !mappedPath.endsWith('/')) {
     /* eslint-disable no-param-reassign */
@@ -28,7 +28,7 @@ export default async function fetchContent(state, params, opts) {
   const { authorization, loginToken } = params;
   const { converterCfg, mappingCfg } = opts;
   const { origin, suffix } = converterCfg || {};
-  const appendSuffix = opts.appendSuffix || appendSuffix;
+  const appendSuffix = opts.appendSuffix || defaultAppendSuffix;
 
   if (!origin) {
     throw new Error('\'origin\' not set in converter.yaml');
