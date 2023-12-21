@@ -93,7 +93,7 @@ export function rewriteLinks(options = {}) {
         .map((url) => new URL(url));
       const identifiers = new Set();
       // eslint-disable-next-line no-unused-vars
-      visitParents(tree, ['link', 'imageReference', 'definition'], (node, ancestors) => {
+      visitParents(tree, ['link', 'definition'], (node, ancestors) => {
         const { type, identifier, url } = node;
         if (type === 'link' || (type === 'definition' && identifiers.delete(identifier))) {
           const canonical = isCanonical(node, ancestors);
