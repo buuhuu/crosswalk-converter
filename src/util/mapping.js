@@ -79,7 +79,7 @@ export function mapInbound(franklinPath, cfg) {
 
     // test the path without extension, and the original path
     const candidates = [path, originalPath];
-    const reversedMappings = cfg.mappings.reverse();
+    const reversedMappings = structuredClone(cfg.mappings).reverse();
 
     for (const mapping of reversedMappings) {
       const [aemBasePath, franklinBasePath] = mapping.split(':', 2);
@@ -129,7 +129,7 @@ export function mapOutbound(aemPath, cfg) {
 
     // test the path without extension, and the original path
     const candidates = [path, originalPath];
-    const reversedMappings = cfg.mappings.reverse();
+    const reversedMappings = structuredClone(cfg.mappings).reverse();
 
     for (const mapping of reversedMappings) {
       const [from, to] = mapping.split(':', 2);
