@@ -16,7 +16,7 @@ import { mapInbound, mapOutbound } from '../src/util/mapping.js';
 describe('Mapping', () => {
   describe('map inbound', () => {
     [
-      ['/content/site/us/en/page:/vanity', '/vanity.html', '/content/site/us/en/page.html'],
+      ['/content/site/us/en/page:/vanity,', '/vanity.html', '/content/site/us/en/page.html'],
       ['/content/site/us/en/page:/vanity', '/vanity-bar.html', '/vanity-bar.html'],
       ['/content/site/ch/en:/en-ch/', '/en-ch/index.html', '/content/site/ch/en.html'],
       // folder to single page is ignored
@@ -46,6 +46,14 @@ describe('Mapping', () => {
       ['/site/header.json:/.helix/headers.json', '/.helix/headers.json', '/site/header.json'],
     ].forEach(([mapping, from, to]) => {
       it(`${mapping} maps ${from} to ${to}`, () => assert.equal(to, mapInbound(from, { mappings: mapping.split(',') })));
+    });
+
+    [
+      ['/content/wknd/:/,/content/experience-fragments/wknd/:/fragments/,/api/assets/:/content/dam/,', '/content/dam/wknd/content-fragments/author.json', '/api/assets/wknd/content-fragments/author.json'],
+    ].forEach(([mapping, from, to]) => {
+      const cfg = { mappings: mapping.split(',') };
+      it(`${mapping} maps ${from} to ${to} for the first time `, () => assert.equal(to, mapInbound(from, cfg)));
+      it(`${mapping} maps ${from} to ${to} for the second time`, () => assert.equal(to, mapInbound(from, cfg)));
     });
 
     // overlapping mappings
