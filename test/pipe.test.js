@@ -12,8 +12,8 @@
 
 /* eslint-disable no-unused-vars */
 
-import { pipe } from '../src/util/pipe.js';
 import assert from 'assert';
+import { pipe } from '../src/util/pipe.js';
 
 describe('Pipe', () => {
   it('runs each step after another', async () => {
