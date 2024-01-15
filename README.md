@@ -87,6 +87,14 @@ This requires setting the environment variables for `wsk`
 - `WSK_AUTH`: the Adobe IO Runtime secret
 - `WSK_NAMESPACE`: the Adobe IO Runtime namespace
 - `WSK_APIHOST`: the Adobe IO Runtime API host
+ 
+### Continuous Deployments
+
+During the installation some GitHub workflows will be added to the project. These handle the contious deployment of the converter code. 
+
+To use them, add the environment variables as documented above to your GitHub repository secrets. Once done the Deploy workflow will deploy the converter for each Pull Request and on `main` as `convert/<branch-name>`. This allows the user to test changes not only locally before merging them. 
+
+On the main branch there is another workflow to undeploy any converter deployment for which no open Pull Requsts exists anymore.
 
 ## Usage
 
