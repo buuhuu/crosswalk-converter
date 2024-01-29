@@ -11,9 +11,16 @@
  */
 /* global WebImporter */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 
 // helix-importer-ui <-> node compatibility:
 if (window) window.decodeHtmlEntities = (text) => text; // not-needed in browser
+
+const TRANSFORMERS = [
+  'forms.js',
+];
 
 export default {
   /**
@@ -34,6 +41,12 @@ export default {
 
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(main, []);
+
+    for (const transformer of TRANSFORMERS) {
+      const transformerModule = await import(`./transformers/${transformer}`);
+      const transformFn = transformerModule.default;
+      await transformFn({ document, url, params });
+    }
 
     return main;
   },

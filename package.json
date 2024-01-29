@@ -26,6 +26,7 @@
     "@adobe/helix-importer": "^3.0.0",
     "@adobe/mdast-util-gridtables": "^2.0.2",
     "@adobe/remark-gridtables": "^1.0.4",
+    "@aemforms/forms-importer": "^0.0.2",
     "dotenv": "^16.3.1",
     "eslint-plugin-mocha": "^10.2.0",
     "express": "4.18.2",
