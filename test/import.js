@@ -13,6 +13,8 @@
 /* global WebImporter */
 /* eslint-disable class-methods-use-this */
 
+import createForms from '../template/transformers/forms.js';
+
 function transformBlock1(main, document) {
   const block = main.querySelector('.block-1');
 
@@ -58,6 +60,7 @@ export default {
 
     transformBlock1(main, document);
     createMetadata(main, document);
+    createForms({ document });
 
     return main;
   },

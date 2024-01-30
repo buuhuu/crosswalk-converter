@@ -89,6 +89,11 @@ async function copyFiles() {
       checksums: ['f71fc2a923f5463e10ed6c7e4596ba9e'],
     },
     {
+      from: 'template/transformers/forms.js',
+      to: `${importerPath}/transformers/forms.js`,
+      checksums: ['f71fc2a923f5463e10ed6c7e4596ba9e'],
+    },
+    {
       from: 'template/paths.yaml',
       to: `${projectRoot}/paths.yaml`,
       checksums: ['693fa775878eddff2d1ccdfdf6ff931b'],
