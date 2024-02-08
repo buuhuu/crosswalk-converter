@@ -11,10 +11,11 @@
  */
 
 /* eslint-disable import/prefer-default-export */
+/* eslint-disable import/extensions */
 
 import { pipeline, toRuntime } from '../src/index.js';
 import converterCfg from './converter.yaml';
-import mappingCfg from './paths.yaml';
+import mappingCfg from './paths.json';
 
 export function main(...args) {
   return pipeline()

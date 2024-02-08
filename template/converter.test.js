@@ -10,10 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+/* eslint-disable import/extensions */
+
 import path from 'path';
 import { pipeline, toMocha } from 'crosswalk-converter';
 import converterCfg from '../../../../converter.yaml';
-import mappingCfg from '../../../../paths.yaml';
+import mappingCfg from '../../../../paths.json';
 import transform from '../../../importer/import.js';
 
 describe('Converter', async () => {

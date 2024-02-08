@@ -12,12 +12,13 @@
 
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-relative-packages */
+/* eslint-disable import/extensions */
 
 import express from 'express';
 import { toExpress, pipeline } from 'crosswalk-converter';
 import transform from '../../../importer/import.js';
 import converterCfg from '../../../../converter.yaml';
-import mappingCfg from '../../../../paths.yaml';
+import mappingCfg from '../../../../paths.json';
 import headHtml from '../../../../head.html';
 
 const app = express();

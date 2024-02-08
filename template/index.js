@@ -16,7 +16,7 @@
 import { pipeline, toRuntime } from 'crosswalk-converter';
 import transform from '../../../importer/import.js';
 import converterCfg from '../../../../converter.yaml';
-import mappingCfg from '../../../../paths.yaml';
+import mappingCfg from '../../../../paths.json';
 
 export function main(...args) {
   return pipeline()
