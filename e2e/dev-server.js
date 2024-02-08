@@ -12,11 +12,12 @@
 
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-relative-packages */
+/* eslint-disable import/extensions */
 
 import express from 'express';
 import { toExpress, pipeline } from '../src/index.js';
 import converterCfg from './converter.yaml';
-import mappingCfg from './paths.yaml';
+import mappingCfg from './paths.json';
 
 const app = express();
 const port = 3030;

@@ -89,9 +89,9 @@ async function copyFiles() {
       checksums: ['f71fc2a923f5463e10ed6c7e4596ba9e'],
     },
     {
-      from: 'template/paths.yaml',
-      to: `${projectRoot}/paths.yaml`,
-      checksums: ['693fa775878eddff2d1ccdfdf6ff931b'],
+      from: 'template/paths.json',
+      to: `${projectRoot}/paths.json`,
+      checksums: ['ab8c6d8cc43888a8c0e878e22a58d811'],
     },
     {
       from: 'template/converter.yaml',

@@ -6,7 +6,7 @@ on:
       - .github/workflows/deploy-converter.yaml
       - tools/actions/**
       - tools/importer/**
-      - paths.yaml
+      - paths.json
       - converter.yaml
       - package-lock.json
   push:
@@ -14,7 +14,7 @@ on:
       - .github/workflows/deploy-converter.yaml
       - tools/actions/**
       - tools/importer/**
-      - paths.yaml
+      - paths.json
       - converter.yaml
       - package-lock.json
     branches:
