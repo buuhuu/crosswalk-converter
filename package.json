@@ -37,6 +37,7 @@
     "html-entities": "^2.4.0",
     "instant-mocha": "^1.5.2",
     "jsdom": "^22.1.0",
+    "linkedom": "^0.16.8",
     "mdast-util-to-hast": "^12.3.0",
     "nock": "^13.3.7",
     "node-fetch": "3.3.1",

@@ -13,7 +13,9 @@
 /* eslint-disable no-param-reassign */
 
 import * as WebImporter from '@adobe/helix-importer';
-import { JSDOM } from 'jsdom';
+import { parseHTML } from 'linkedom';
+
+function JSDOM(html) { return parseHTML(html); }
 
 function domParser(html, url) {
   return new JSDOM(html, { url }).window.document;
