@@ -23,6 +23,14 @@ function defaultAppendSuffix(mappedPath, suffix) {
   return mappedPath;
 }
 
+async function wrapInHtmlBodyIfNecessary(resp) {
+  let text = await resp.text();
+  if (!text.includes('<body>') || !text.includes('</body>')) {
+    text = `<html><body>${text}</body></html>`;
+  }
+  return text;
+}
+
 export default async function fetchContent(state, params, opts) {
   const { path, queryString } = state;
   const { authorization, loginToken } = params;
@@ -57,7 +65,7 @@ export default async function fetchContent(state, params, opts) {
   const [contentType] = (resp.headers.get('content-type') || 'text/html').split(';');
   const contentLength = resp.headers.get('content-length') || -1;
   // for binaries return the readable stream
-  const blob = isBinary(contentType) ? resp.body : await resp.text();
+  const blob = isBinary(contentType) ? resp.body : await wrapInHtmlBodyIfNecessary(resp);
 
   return {
     ...state, originUrl, blob, contentType, contentLength,
