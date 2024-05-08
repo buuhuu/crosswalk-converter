@@ -14,6 +14,7 @@ import { pipeline } from './pipeline.js';
 import { toExpress } from './wrapper/express.js';
 import { toRuntime } from './wrapper/runtime.js';
 import { toMocha } from './wrapper/mocha.js';
+import { pipe } from './util/pipe.js';
 
 // reexport specifics to extend the pipeline
 export {
@@ -23,6 +24,7 @@ export {
 } from './steps/index.js';
 
 export {
+  pipe,
   pipeline,
   toExpress,
   toRuntime,
