@@ -96,11 +96,19 @@ export function toRuntime(pipe, opts = {}) {
         { ...params, authorization },
         opts,
       );
-      const statusCode = error?.code || 200;
-      const body = error?.message || html || md || blob;
+      if (error) {
+        return {
+          error: {
+            statusCode: error.code,
+            body: error.message,
+            headers: { 'content-type': 'text/plain' },
+          },
+        };
+      }
+      const body = html || md || blob;
       const { origin } = converterCfg;
       return {
-        statusCode,
+        statusCode: 200,
         body,
         headers: {
           'content-type': contentType || 'text/plain',
@@ -110,7 +118,13 @@ export function toRuntime(pipe, opts = {}) {
         },
       };
     } catch (ex) {
-      return { statusCode: 500, body: `${ex.stack}`, headers: { 'content-type': 'text/plain' } };
+      return {
+        error: {
+          statusCode: 500,
+          body: `${ex.stack}`,
+          headers: { 'content-type': 'text/plain' },
+        },
+      };
     }
   };
 }
