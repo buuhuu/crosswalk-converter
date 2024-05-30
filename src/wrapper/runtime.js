@@ -89,6 +89,7 @@ export function toRuntime(pipe, opts = {}) {
     }
 
     try {
+      throw new Error('test error');
       const {
         error, blob, html, md, contentType,
       } = await pipe.run(
@@ -110,7 +111,7 @@ export function toRuntime(pipe, opts = {}) {
         },
       };
     } catch (ex) {
-      return { statusCode: 500, body: `${ex.stack}`, headers: { 'content-type': 'text/plain' } };
+      return { error: { statusCode: 500, body: `${ex.stack}`, headers: { 'content-type': 'text/plain' } } };
     }
   };
 }
