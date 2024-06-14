@@ -18,6 +18,9 @@ import { parseHTML } from 'linkedom';
 function JSDOM(html) { return parseHTML(html); }
 
 function domParser(html, url) {
+  if (!html.includes('<body>') || !html.includes('</body>')) {
+    html = `<html><body>${html}</body></html>`;
+  }
   return new JSDOM(html, { url }).window.document;
 }
 
