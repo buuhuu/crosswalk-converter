@@ -255,7 +255,8 @@ export function toExpress(pipe, opts = {}) {
       const queryString = reqUrl.search.substring(1);
       const sendRes = (state) => {
         // Handling in case of nested error object
-        if (Object.hasOwn(state, 'error')) state = state.error;
+        if (Object.hasOwn(state,'error') && Object.keys(state).length === 1)
+          state = state.error;
         res.set({ ...state.headers, 'cache-control': 'privat, max-age=300' });
         res.status(state.statusCode);
         res.send(state.body);
