@@ -253,10 +253,12 @@ export function toExpress(pipe, opts = {}) {
       const { originalUrl, protocol } = req;
       const reqUrl = new URL(`${protocol}://${req.get('host')}${originalUrl}`);
       const queryString = reqUrl.search.substring(1);
-      const sendRes = ({ statusCode, body, headers }) => {
-        res.set({ ...headers, 'cache-control': 'privat, max-age=300' });
-        res.status(statusCode);
-        res.send(body);
+      const sendRes = (state) => {
+        // Handling in case of nested error object
+        if (Object.hasOwn(state, 'error')) state = state.error;
+        res.set({ ...state.headers, 'cache-control': 'privat, max-age=300' });
+        res.status(state.statusCode);
+        res.send(state.body);
       };
 
       // check if the file was already served
