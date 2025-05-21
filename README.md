@@ -1,3 +1,7 @@
+> [!CAUTION]
+> Using the converter-basd aproach for publishing AEM content to Edge Delivery is not supported anymore.
+> Please follow the instructions on https://www.aem.live/docs/aem-authoring to use AEM based authoring and Universal Editor with Edge Delivery Services.
+
 # Crosswalk Converter
 
 This package implements a serverless function, that can be used to transform html served from an origin service to semantic html that can be imported to Edge Delivery Services using [helix-html2md](https://github.com/adobe/helix-html2md).
