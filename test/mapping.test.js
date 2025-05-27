@@ -35,7 +35,7 @@ describe('Mapping', () => {
       // absolute url
       ['/:/', 'https://www.adobe.com/path', 'https://www.adobe.com/path'],
       // extensions other than .html
-      ['/content/site/metadata:/metadata.json', '/metadata.json', '/content/site/metadata.json'],
+      ['/content/site/metadata:/metadata.json', '/metadata.json', '/content/site/metadata.hlx.json'],
       ['/content/dam/path/to/file.pdf:/file.pdf', '/file.pdf', '/content/dam/path/to/file.pdf'],
       // fallback after ignored mapping
       // 1. the 2nd more specific mapping conflicts with the 1st
@@ -43,13 +43,13 @@ describe('Mapping', () => {
       ['/global/:/,/global/en:/', '/.html', '/global/en.html'],
       ['/global/:/,/global/en:/', '/de.html', '/global/de.html'],
       ['/global/:/,/global/en:/', '/en/foobar.html', '/global/en/foobar.html'],
-      ['/site/header.json:/.helix/headers.json', '/.helix/headers.json', '/site/header.json'],
+      ['/site/header.json:/.helix/headers.json', '/.helix/headers.json', '/site/header.hlx.json'],
     ].forEach(([mapping, from, to]) => {
       it(`${mapping} maps ${from} to ${to}`, () => assert.equal(to, mapInbound(from, { mappings: mapping.split(',') })));
     });
 
     [
-      ['/content/wknd/:/,/content/experience-fragments/wknd/:/fragments/,/api/assets/:/content/dam/,', '/content/dam/wknd/content-fragments/author.json', '/api/assets/wknd/content-fragments/author.json'],
+      ['/content/wknd/:/,/content/experience-fragments/wknd/:/fragments/,/api/assets/:/content/dam/,', '/content/dam/wknd/content-fragments/author.json', '/api/assets/wknd/content-fragments/author.hlx.json'],
     ].forEach(([mapping, from, to]) => {
       const cfg = { mappings: mapping.split(',') };
       it(`${mapping} maps ${from} to ${to} for the first time `, () => assert.equal(to, mapInbound(from, cfg)));
