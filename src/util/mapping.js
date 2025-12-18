@@ -27,6 +27,12 @@ function appendExtensionInbound(path, extension) {
   if (!path.endsWith(extension)) {
     path += extension;
   }
+  // if this is a .json / spreadsheet, add the hlx format selector
+  if (path.endsWith('.json')) {
+    path = path.substring(0, path.length - 5);
+    if (!path.endsWith('.hlx')) path += '.hlx.json';
+    else path += '.json';
+  }
   return path;
 }
 
